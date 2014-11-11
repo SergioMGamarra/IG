@@ -46,8 +46,8 @@ char *nombre_ply;
 char *nombre_ply2;
 
 int opc = 1;
-int opcFigura = 1; 
-int opcFiguraAux = 1;
+int opcFigura = 5; 
+int opcFiguraAux = 5;
 
 void leer_datos_ply(vector<float> &vertic, vector<int> &faces, char *nombre) {
     _file_ply ply;
@@ -202,6 +202,23 @@ void leer_datos_cubo(vector<_vertex3f> &Vertices, vector<_vertex3f> &triangles) 
 
 }
 
+void leer_datos_rebo(vector<_vertex3f> &Vertices, vector<_vertex3f> &triangles)  {
+    vector<_vertex3f> V(2);
+    Vertices = V;
+
+
+    Vertices[0].x =  0.5f;
+    Vertices[0].y =  0.5f;
+    Vertices[0].z =  0.0f;
+
+    Vertices[1].x =  0.5f;
+    Vertices[1].y = -0.5f;
+    Vertices[1].z =  0.0f;
+
+    generateRotatePoints(Vertices, triangles,4) ;
+
+}
+
 
 void clear_window()
 {
@@ -264,7 +281,7 @@ glEnd();
 
 
 void draw_menu(int Opc, int OpcFig) {
-    if (OpcFig == 1 | opcFigura == 2) {
+    if (OpcFig == 1 || opcFigura == 2 || opcFigura == 5) {
         draw(Vertices, Caras, opc);
     }else {
         draw(vertic, faces, opc);
@@ -333,6 +350,7 @@ void normal_keys(unsigned char Tecla1,int x,int y)
     if (toupper(Tecla1)=='2') opcFiguraAux = 2;
     if (toupper(Tecla1)=='3') opcFiguraAux = 3;
     if (toupper(Tecla1)=='4') opcFiguraAux = 4;
+    if (toupper(Tecla1)=='5') opcFiguraAux = 5;
 
 
 
@@ -351,10 +369,13 @@ void normal_keys(unsigned char Tecla1,int x,int y)
             case 4:
                 leer_datos_ply(vertic, faces,  nombre_ply2);
                 break;   
+            case 5:
+                leer_datos_rebo(Vertices, Caras);
+                break;
         } 
     }
     
-    if (opcFigura == 1 || opcFigura == 2)
+    if (opcFigura == 1 || opcFigura == 2 || opcFigura == 5)
         draw(Vertices, Caras, opc);
     else 
         draw(vertic, faces, opc);
