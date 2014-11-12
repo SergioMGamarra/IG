@@ -69,30 +69,33 @@ void draw_ajedrez(vector<_vertex3f> &vertices, vector<_vertex3f> &caras) {
 		}
 	glEnd();
 
-
 }
 
 
 void generateRotatePoints(vector<_vertex3f> &vertices, vector<_vertex3f> &caras, int n)  {
 	double ang;
+	int tapas = 0;
 
 	int num_elem_orig = vertices.size();
-	vertices.resize(num_elem_orig*n);
-	cout << "Tamaño original: " << num_elem_orig << endl;
-	cout << "Nuevo Tamaño: "<< vertices.size() << endl;
 
-	for (int i = 1; i <= n; ++i) {
+	vertices.resize(num_elem_orig*n);
+
+	for (int i = 1; i <= n-1; ++i) {
 		ang = i*((2*PI)/n);
-		for(int j = 0; j < num_elem_orig; ++j)  {
+		for (int j = 0; j < num_elem_orig; ++j) {
+			if(i == 1) 
+				if(vertices[j].x == 0 && vertices[j].z == 0) tapas++;
+
 			vertices[i*num_elem_orig+j].x = vertices[j].x * cos(ang) + vertices[j].z*sin(ang);
 			vertices[i*num_elem_orig+j].y = vertices[j].y;
 			vertices[i*num_elem_orig+j].z = -vertices[j].x * sin(ang) + vertices[j].z*cos(ang);
-		}	
+
+		}
 	}
 
 	// Obtener las caras
-	int modulo = (vertices.size()-contador_tapas);
-	int cuerpo = (vertices .size()-contador_tapas)/n;
+	int modulo = (vertices.size()-tapas);
+	int cuerpo = (vertices .size()-tapas)/n;
 	int faces = 0;
 
 	caras.clear();
@@ -114,16 +117,18 @@ void generateRotatePoints(vector<_vertex3f> &vertices, vector<_vertex3f> &caras,
 		}
 	}
 
+	cout << "Tapas: " << tapas << endl;
+
 	if (tapas == 2) {
 		caras.resize(caras.size()+2*n);
 		for(int i = 0; i<n; ++i) {
 			caras[caras.size()-n+i]._0 = (i*cuerpo)%modulo;
 			caras[caras.size()-n+i]._1 = (i*cuerpo+2)%modulo;
-			caras[caras.size()-n+i]._2 = puntos.size()-1;
+			caras[caras.size()-n+i]._2 = vertices.size()-1;
 
-			caras[caras.size()-(2*n+i)]._0 = (i*cuerpol+1)%modulo;
+			caras[caras.size()-(2*n+i)]._0 = (i*cuerpo+1)%modulo;
 			caras[caras.size()-(2*n)+i]._1 =  (i*cuerpo+3)%modulo;
-            caras[caras.size()-(2*n)+i]._2 = puntos.size()-2;
+            caras[caras.size()-(2*n)+i]._2 = vertices.size()-2;
 		}
 	}
 
@@ -167,6 +172,11 @@ int modulo=(Perfil_Puntos.size()-contador_tapas);
             Perfil_Caras[Perfil_Caras.size()-(2*n)+i]._2 = Perfil_Puntos.size()-2;// 8 // 8 // 8 //  
 
 */
+            for (int i  = 0; i < vertices.size();++i) {
+            	cout << "Para la posición i:"<< i << "Los valores son: x: "<< vertices[i].x << ", y: " << vertices[i].y << ", z: " << vertices[i].z << endl; 
+            }
+
+
 
 }
 
