@@ -72,20 +72,21 @@ void draw_ajedrez(vector<_vertex3f> &vertices, vector<_vertex3f> &caras) {
 }
 
 
-void generateRotatePoints(vector<_vertex3f> &vertices, vector<_vertex3f> &caras, int n)  {
+void generateRotatePoints(vector<_vertex3f> &vertices, vector<_vertex3f> &caras, vector<_vertex3f> &tapasV, int n)  {
 	double ang;
 	int tapas = 0;
 
+	if (tapasV.size()!=0) tapas = 2;
+
+
 	int num_elem_orig = vertices.size();
+	vector<_vertex3f> tapa(2);
 
 	vertices.resize(num_elem_orig*n);
 
-	for (int i = 1; i <= n-1; ++i) {
+	for (int i = num_elem_orig-1; i <= n-1; ++i) {
 		ang = i*((2*PI)/n);
 		for (int j = 0; j < num_elem_orig; ++j) {
-			if(i == 1) 
-				if(vertices[j].x == 0 && vertices[j].z == 0) tapas++;
-
 			vertices[i*num_elem_orig+j].x = vertices[j].x * cos(ang) + vertices[j].z*sin(ang);
 			vertices[i*num_elem_orig+j].y = vertices[j].y;
 			vertices[i*num_elem_orig+j].z = -vertices[j].x * sin(ang) + vertices[j].z*cos(ang);
@@ -93,91 +94,46 @@ void generateRotatePoints(vector<_vertex3f> &vertices, vector<_vertex3f> &caras,
 		}
 	}
 
-	// Obtener las caras
-	int modulo = (vertices.size()-tapas);
-	int cuerpo = (vertices .size()-tapas)/n;
-	int faces = 0;
+	vertices.resize(vertices.size()+2);
+	vertices[vertices.size()-2]=tapasV[1];
+	vertices[vertices.size()-1]=tapasV[0];
 
+	// Obtenemos las caras
+	int mod = (vertices.size()-tapas);
+	cout << "Modulo: " << mod << endl;
+	int cuerpo = vertices.size();
 	caras.clear();
-
-	for(int i = 0; i < cuerpo-1;++i)  {
-		for(int c1 = 0, c2 = 0; c1<(n*2);c1+=2,c2++) {
-			faces = faces+2;
+	int faces = 0;
+	for(int i = 0; i < cuerpo/n;++i) {
+		for(int c1=0, c2=0; c1<(n*2); c1+=2,c2++) {
+			faces+=2;
 			caras.resize(faces);
-
 			// cara par
-			caras[i*(n*2)+c1]._0 = (i+cuerpo*c2)%modulo;
-            caras[i*(n*2)+c1]._1 = ((i+cuerpo*c2)+cuerpo)%modulo;
-            caras[i*(n*2)+c1]._2 = ((i+cuerpo*c2)+1)%modulo;
-
-			// cara impar
-            caras[(i*(n*2)+c1)+1]._0 = ((i+cuerpo*c2)+cuerpo)%modulo;
-            caras[(i*(n*2)+c1)+1]._1 = (((i+cuerpo*c2)+cuerpo)+1)%modulo;
-            caras[(i*(n*2)+c1)+1]._2 = ((i+cuerpo*c2)+1)%modulo;
-		}
-	}
-
-	cout << "Tapas: " << tapas << endl;
-
-	if (tapas == 2) {
-		caras.resize(caras.size()+2*n);
-		for(int i = 0; i<n; ++i) {
-			caras[caras.size()-n+i]._0 = (i*cuerpo)%modulo;
-			caras[caras.size()-n+i]._1 = (i*cuerpo+2)%modulo;
-			caras[caras.size()-n+i]._2 = vertices.size()-1;
-
-			caras[caras.size()-(2*n+i)]._0 = (i*cuerpo+1)%modulo;
-			caras[caras.size()-(2*n)+i]._1 =  (i*cuerpo+3)%modulo;
-            caras[caras.size()-(2*n)+i]._2 = vertices.size()-2;
-		}
-	}
-
-/* CODIDO AUXILIAR TONI
-int modulo=(Perfil_Puntos.size()-contador_tapas);
-    //cout << "MODULOOOO" << modulo<<  endl;
-    int cuerpo_central=(Perfil_Puntos.size()-contador_tapas)/n;    
-    Perfil_Caras.clear();
-    int faces=0;
-    for(int i=0;i<cuerpo_central-1;i++){ // me recorre los dos vertices que definen el cuerpo central del prisma
-        for(int c1=0,c2=0; c1<(n*2); c1+=2,c2++){ // -2 pra que quede hueco
-            faces=faces+2;            
-            Perfil_Caras.resize(faces);            
-            // cara par
-            Perfil_Caras[i*(n*2)+c1]._0 = (i+cuerpo_central*c2)%modulo; // 0 // 2 // 4 // 0 // 2 // 4
-            Perfil_Caras[i*(n*2)+c1]._1 = ((i+cuerpo_central*c2)+cuerpo_central)%modulo; // 2 // 4 // 0
-            Perfil_Caras[i*(n*2)+c1]._2 = ((i+cuerpo_central*c2)+1)%modulo;// 1 // 3 // 5 // 1 // 3 // 5
+			caras[i*(n*2)+c1]._0 = (i+cuerpo*c2)%mod;
+			caras[i*(n*2)+c1]._1 = ((i+cuerpo*c2)+cuerpo)%mod; // 2 // 4 // 0
+            caras[i*(n*2)+c1]._2 = ((i+cuerpo*c2)+1)%mod;// 1 // 3 // 5 // 1 // 3 // 5
             //cout << Perfil_Caras[i*(n*2)+c1]._0 << "caras" <<endl;
             // cara impar
-            Perfil_Caras[(i*(n*2)+c1)+1]._0 = ((i+cuerpo_central*c2)+cuerpo_central)%modulo;
-            Perfil_Caras[(i*(n*2)+c1)+1]._1 = (((i+cuerpo_central*c2)+cuerpo_central)+1)%modulo;
-            Perfil_Caras[(i*(n*2)+c1)+1]._2 = ((i+cuerpo_central*c2)+1)%modulo;
+            caras[(i*(n*2)+c1)+1]._0 = ((i+cuerpo*c2)+cuerpo)%mod;
+            caras[(i*(n*2)+c1)+1]._1 = (((i+cuerpo*c2)+cuerpo)+1)%mod;
+            caras[(i*(n*2)+c1)+1]._2 = ((i+cuerpo*c2)+1)%mod;
 
+		}
+	}
 
-
+	if(tapas==2){
+            
+        caras.resize(caras.size()+2*n);
+        for(int i=0;i<n;i++){
+            caras[caras.size()-n+i]._0 = (i*cuerpo)%mod; // 0 // 2 // 4 //
+            caras[caras.size()-n+i]._1 =  (i*cuerpo+2)%mod; // 2 // 4 //0
+            caras[caras.size()-n+i]._2 = vertices.size()-1; // 7 // 7 // 7 // 7
+        
+            caras[caras.size()-(2*n)+i]._0 = (i*cuerpo+1)%mod; // 0 // 2 // 4 //
+            caras[caras.size()-(2*n)+i]._1 =  (i*cuerpo+3)%mod; // 2 // 4 //0
+            caras[caras.size()-(2*n)+i]._2 = vertices.size()-2; // 8 // 8 // 8 //  
         }
     }
-    cout << "Caras sin tapas despues" << Perfil_Caras.size()<<endl;
-
-
-    if(contador_tapas==2){
-            
-        Perfil_Caras.resize(Perfil_Caras.size()+2*n);
-        for(int i=0;i<n;i++){
-            Perfil_Caras[Perfil_Caras.size()-n+i]._0 = (i*cuerpo_central)%modulo; // 0 // 2 // 4 //
-            Perfil_Caras[Perfil_Caras.size()-n+i]._1 =  (i*cuerpo_central+2)%modulo; // 2 // 4 //0
-            Perfil_Caras[Perfil_Caras.size()-n+i]._2 = Perfil_Puntos.size()-1;// 7 // 7 // 7 // 7
-        
-            Perfil_Caras[Perfil_Caras.size()-(2*n)+i]._0 = (i*cuerpo_central+1)%modulo; // 0 // 2 // 4 //
-            Perfil_Caras[Perfil_Caras.size()-(2*n)+i]._1 =  (i*cuerpo_central+3)%modulo; // 2 // 4 //0
-            Perfil_Caras[Perfil_Caras.size()-(2*n)+i]._2 = Perfil_Puntos.size()-2;// 8 // 8 // 8 //  
-
-*/
-            for (int i  = 0; i < vertices.size();++i) {
-            	cout << "Para la posición i:"<< i << "Los valores son: x: "<< vertices[i].x << ", y: " << vertices[i].y << ", z: " << vertices[i].z << endl; 
-            }
-
-
-
 }
 
 

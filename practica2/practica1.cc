@@ -203,26 +203,27 @@ void leer_datos_cubo(vector<_vertex3f> &Vertices, vector<_vertex3f> &triangles) 
 }
 
 void leer_datos_rebo(vector<_vertex3f> &Vertices, vector<_vertex3f> &triangles)  {
-    vector<_vertex3f> V(4);
+    vector<_vertex3f> V(2);
+    vector<_vertex3f> tap(2);
     Vertices = V;
 
-    Vertices[2].x =  0.5f;
-    Vertices[2].y =  0.5f;
-    Vertices[2].z =  0.0f;
+    Vertices[0].x =  0.5f;
+    Vertices[0].y =  0.5f;
+    Vertices[0].z =  0.0f;
 
-    Vertices[3].x =  0.5f;
-    Vertices[3].y = -0.5f;
-    Vertices[3].z =  0.0f;
-
-    Vertices[1].x = 0.0f;
+    Vertices[1].x =  0.5f;
     Vertices[1].y = -0.5f;
-    Vertices[1].z = 0.0f;
+    Vertices[1].z =  0.0f;
 
-    Vertices[0].x = 0.0f;
-    Vertices[0].y = 0.5f;
-    Vertices[0].z = 0.0f;
+    tap[1].x = 0.0f;
+    tap[1].y = -0.5f;
+    tap[1].z = 0.0f;
 
-    generateRotatePoints(Vertices, triangles, 6) ;
+    tap[0].x = 0.0f;
+    tap[0].y = 0.5f;
+    tap[0].z = 0.0f;
+
+    generateRotatePoints(Vertices, triangles, tap, 4) ;
     cout << "Termino la funcion leer_datos_rebo" << endl;
 }
 

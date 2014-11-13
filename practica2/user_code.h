@@ -27,7 +27,7 @@ void draw_alambre (vector<_vertex3f> &vertices, vector<_vertex3f> &caras);
 void draw_solid (vector<_vertex3f> &vertices, vector<_vertex3f> &caras);
 void draw_points (vector<_vertex3f> &vertices);
 void draw_ajedrez (vector<_vertex3f> &vertices, vector<_vertex3f> &caras);
-void generateRotatePoints(vector<_vertex3f> &vertices, vector<_vertex3f> &caras, int n);
+void generateRotatePoints(vector<_vertex3f> &vertices, vector<_vertex3f> &caras, vector<_vertex3f> &tapas, int n);
 void draw_points (vector<float> &vertices);
 void draw_alambre (vector<float> &vertices,vector<int> &faces);
 void draw_solid (vector<float> &vertices,vector<int> &faces);
