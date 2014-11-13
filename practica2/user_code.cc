@@ -281,6 +281,69 @@ void draw_ajedrez(vector<float> &vertices,vector<int> &faces) {
 	glEnd();
 */
 
+//************************Normales*************************************
+void Normales_Caras(vector<_vertex3f> &vertices, vector<_vertex3f> &caras,vector<_vertex3f> &normales_caras)  {
+	normales_caras.clear();
+	normales_caras.resize(0);
+
+	for(int i = 0; i < caras.size(); ++i)  {
+		normales_caras.resize(normales_caras.size()+1);
+		_vertex3f AB, BC, res;
+
+		AB.x = vertices[caras[i].y].x - vertices[caras[i].x].x;
+		AB.y = vertices[caras[i].y].y - vertices[caras[i].x].y;
+		AB.z = vertices[caras[i].y].z - vertices[caras[i].x].z;
+
+		BC.x = vertices[caras[i].z].x - vertices[caras[i].y].x;
+		BC.y = vertices[caras[i].z].y - vertices[caras[i].y].y;
+		BC.z = vertices[caras[i].z].z - vertices[caras[i].y].z;
+
+		res.x = AB.y*BC.z - AB.z*BC.y;
+		res.y = AB.z*BC.x - AB.x*BC.z;
+		res.z = AB.x*BC.y - AB.y*BC.x;
+
+		normales_caras[i] = Normalizar(res);
+
+	}
+}
+
+// ****************************** Normalizar ***********************************
+_vertex3f Normalizar(_vertex3f vertice) {
+	double mod = sqrt(vertice.x+vertice.y+vertice.z);
+
+	vertice.x = vertice.x / mod;
+	vertice.y = vertice.y / mod;
+	vertice.z = vertice.z / mod;
+
+	return vertice;
+}
+
+
+void Normales_Vertices(vector<_vertex3f> &vertices, vector<_vertex3f> &caras, vector<_vertex3f> &normales_caras, vector<_vertex3f> &normales_vertices) {
+	_vertex3f N;
+	double mod;
+	int contador_puntos = 0;
+	normales_vertices.clear();
+	normales_vertices.resize(vertices.size());
+	for (int i = 0; i < vertices.size(); ++i)  {
+		for(int j = 0; j < caras.size(); ++j) {
+			if (caras[j].x== i || caras[j].y == i || caras[j].z == i) {
+				N = normales_caras[i]; 
+				contador_puntos++;
+			}
+		}
+		N.x = N.x/contador_puntos;
+		N.y = N.y/contador_puntos;
+		N.z = N.z/contador_puntos;
+		Normalizar(N);
+		normales_vertices [i] = N;
+		contador_puntos = 0;
+		N = 0;
+	}
+}
+
+
+
 //************************Funcion draw ++++++++++++++++++++++++++++++
 
 void draw (vector<_vertex3f> &vertices, vector<_vertex3f> &caras, int opc) {

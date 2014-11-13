@@ -223,7 +223,7 @@ void leer_datos_rebo(vector<_vertex3f> &Vertices, vector<_vertex3f> &triangles) 
     tap[0].y = 0.5f;
     tap[0].z = 0.0f;
 
-    generateRotatePoints(Vertices, triangles, tap, 4) ;
+    generateRotatePoints(Vertices, triangles, tap, 5) ;
     cout << "Termino la funcion leer_datos_rebo" << endl;
 }
 

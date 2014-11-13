@@ -32,5 +32,9 @@ void draw_points (vector<float> &vertices);
 void draw_alambre (vector<float> &vertices,vector<int> &faces);
 void draw_solid (vector<float> &vertices,vector<int> &faces);
 void draw_ajedrez(vector<float> &vertices,vector<int> &faces);
+
+void Normales_Caras(vector<_vertex3f> &vertices, vector<_vertex3f> &caras,vector<_vertex3f> &normales_vertices);
+_vertex3f Normalizar(_vertex3f vertice);
+
 void draw (vector<_vertex3f> &vertices, vector<_vertex3f> &caras, int opc);
 void draw (vector<float> &vertices, vector<int> &caras, int opc);
