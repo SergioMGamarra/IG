@@ -37,7 +37,7 @@ int UI_window_pos_x=50,UI_window_pos_y=50,UI_window_width=500,UI_window_height=5
 // Vertices del tetraedro
 
 vector<_vertex3f> Vertices;
-vector<_vertex3f> Caras;
+vector<_vertex3i> Caras;
 
 vector<float> vertic;
 vector<int> faces;
@@ -49,6 +49,26 @@ int opc = 1;
 int opcFigura = 5; 
 int opcFiguraAux = 5;
 
+void FloatToVertexf(vector<float> &vect, vector<_vertex3f> &result) {
+    result.resize(vect.size()/3);
+    for (int i = 0; i < vect.size(); ++i) {
+        result[i].x = vect[3*i];
+        result[i].y = vect[3*i+1];
+        result[i].z = vect[3*i+2];
+    }
+}
+
+
+void IntToVertexi(vector<int> &vect, vector<_vertex3i> &result) {
+    result.resize(vect.size()/3);
+    for (int i = 0; i < vect.size(); ++i) {
+        result[i].x = vect[3*i];
+        result[i].y = vect[3*i+1];
+        result[i].z = vect[3*i+2];
+    }
+}
+
+
 void leer_datos_ply(vector<float> &vertic, vector<int> &faces, char *nombre) {
     _file_ply ply;
 
@@ -57,8 +77,22 @@ void leer_datos_ply(vector<float> &vertic, vector<int> &faces, char *nombre) {
     ply.close();
 }
 
+void leer_datos_ply(vector<_vertex3f> &vertices, vector<_vertex3f> &tapas, vector<_vertex3i> &caras, char *nombre) {
+    _file_ply ply;
 
-void leer_datos_tetraedro(vector<_vertex3f> &Vertices, vector<_vertex3f> &triangles)  {
+    vector<float> vertic; 
+    vector<int> faces;
+    cout << "Aun no hay fallos" << endl;
+    ply.open(nombre);
+    ply.read(vertic, faces);
+    cout << "Hasta aquí todo bien." << endl;
+    FloatToVertexf(vertic, tapas, vertices);
+    IntToVertexi(faces, caras);
+    ply.close();
+}
+
+
+void leer_datos_tetraedro(vector<_vertex3f> &Vertices, vector<_vertex3i> &triangles)  {
     vector<_vertex3f> V(4);
     Vertices = V;
 
@@ -78,7 +112,7 @@ void leer_datos_tetraedro(vector<_vertex3f> &Vertices, vector<_vertex3f> &triang
     Vertices[3].y = -0.448f;
     Vertices[3].z =  0.0f;
 
-    vector<_vertex3f> T(4);
+    vector<_vertex3i> T(4);
     triangles = T;
 
     triangles[0].x = 0;
@@ -98,7 +132,7 @@ void leer_datos_tetraedro(vector<_vertex3f> &Vertices, vector<_vertex3f> &triang
     triangles[3].z = 3;
 }
 
-void leer_datos_cubo(vector<_vertex3f> &Vertices, vector<_vertex3f> &triangles)  {
+void leer_datos_cubo(vector<_vertex3f> &Vertices, vector<_vertex3i> &triangles)  {
 
     vector<_vertex3f> V(8);
     Vertices = V;
@@ -136,7 +170,7 @@ void leer_datos_cubo(vector<_vertex3f> &Vertices, vector<_vertex3f> &triangles) 
     Vertices[7].z = -0.5f;
 
 
-    vector<_vertex3f> T(12);
+    vector<_vertex3i> T(12);
     triangles = T;
 
 //------------------------
@@ -202,7 +236,7 @@ void leer_datos_cubo(vector<_vertex3f> &Vertices, vector<_vertex3f> &triangles) 
 
 }
 
-void leer_datos_rebo(vector<_vertex3f> &Vertices, vector<_vertex3f> &triangles)  {
+void leer_datos_rebo(vector<_vertex3f> &Vertices, vector<_vertex3i> &triangles)  {
     vector<_vertex3f> V(2);
     vector<_vertex3f> tap(2);
     Vertices = V;
@@ -218,7 +252,7 @@ void leer_datos_rebo(vector<_vertex3f> &Vertices, vector<_vertex3f> &triangles) 
     tap[1].x = 0.0f;
     tap[1].y = -0.5f;
     tap[1].z = 0.0f;
-
+ 
     tap[0].x = 0.0f;
     tap[0].y = 0.5f;
     tap[0].z = 0.0f;
