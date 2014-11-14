@@ -38,6 +38,7 @@ int UI_window_pos_x=50,UI_window_pos_y=50,UI_window_width=500,UI_window_height=5
 
 vector<_vertex3f> Vertices;
 vector<_vertex3i> Caras;
+vector<_vertex3f> Tapas;
 
 vector<float> vertic;
 vector<int> faces;
@@ -51,10 +52,28 @@ int opcFiguraAux = 5;
 
 void FloatToVertexf(vector<float> &vect, vector<_vertex3f> &result) {
     result.resize(vect.size()/3);
-    for (int i = 0; i < vect.size(); ++i) {
+    for (int i = 0; i < vect.size()/3; ++i) {
         result[i].x = vect[3*i];
         result[i].y = vect[3*i+1];
         result[i].z = vect[3*i+2];
+    }
+}
+
+void FloatToVertexf(vector<float> &vect, vector<_vertex3f> &vertices, vector<_vertex3f> &tapas)  {
+    vertices.resize(0);
+    tapas.resize(0);
+    int contador_tapa = 0;
+    for (int i = 0; i < vect.size()/3; ++i) {
+        if (vect[i*3] == 0 && vect[i*3+2] == 0 && contador_tapa < 2) {
+            tapas.resize(tapas.size()+1);
+            tapas[contador_tapa].x = vect[i*3];
+            tapas[contador_tapa].y = vect[i*3+1];
+            tapas[contador_tapa].z = vect[i*3+2];
+        }else {
+            vertices[i-contador_tapa].x = vect[i*3];
+            vertices[i-contador_tapa].y = vect[i*3+1];
+            vertices[i-contador_tapa].z = vect[i*3+2];
+        }
     }
 }
 
@@ -86,7 +105,7 @@ void leer_datos_ply(vector<_vertex3f> &vertices, vector<_vertex3f> &tapas, vecto
     ply.open(nombre);
     ply.read(vertic, faces);
     cout << "Hasta aquí todo bien." << endl;
-    FloatToVertexf(vertic, tapas, vertices);
+    FloatToVertexf(vertic, vertices, tapas);
     IntToVertexi(faces, caras);
     ply.close();
 }
@@ -236,9 +255,13 @@ void leer_datos_cubo(vector<_vertex3f> &Vertices, vector<_vertex3i> &triangles) 
 
 }
 
-void leer_datos_rebo(vector<_vertex3f> &Vertices, vector<_vertex3i> &triangles)  {
+void leer_datos_revo(vector<_vertex3f> &Vertices, vector<_vertex3i> &triangles, vector<_vertex3f> &tap)  {
+
+    //leer_datos_ply(Vertices, tap, triangles, nombre_ply_rev);
+
+
     vector<_vertex3f> V(2);
-    vector<_vertex3f> tap(2);
+    tap.resize(2);
     Vertices = V;
 
     Vertices[0].x =  0.5f;
@@ -257,8 +280,73 @@ void leer_datos_rebo(vector<_vertex3f> &Vertices, vector<_vertex3i> &triangles) 
     tap[0].y = 0.5f;
     tap[0].z = 0.0f;
 
-    generateRotatePoints(Vertices, triangles, tap, 5) ;
-    cout << "Termino la funcion leer_datos_rebo" << endl;
+    generateRotatePoints(Vertices, triangles, tap, 8) ;
+    cout << "Termino la funcion leer_datos_revo" << endl;
+}
+
+void leer_datos_revo2(vector<_vertex3f> &Vertices, vector<_vertex3i> &triangles, vector<_vertex3f> &tap)  {
+
+
+    vector<_vertex3f> V(2);
+    tap.resize(0);
+    Vertices = V;
+
+    Vertices[0].x =  0.5f;
+    Vertices[0].y =  0.5f;
+    Vertices[0].z =  0.0f;
+
+    Vertices[1].x =  0.5f;
+    Vertices[1].y = -0.5f;
+    Vertices[1].z =  0.0f;
+
+    generateRotatePoints(Vertices, triangles, tap, 8) ;
+    cout << "Termino la funcion leer_datos_revo2" << endl;
+}
+
+void leer_datos_revo3(vector<_vertex3f> &Vertices, vector<_vertex3i> &triangles, vector<_vertex3f> &tap)  {
+
+
+    vector<_vertex3f> V(2);
+    tap.resize(1);
+    Vertices = V;
+
+    Vertices[0].x =  0.4f;
+    Vertices[0].y =  0.5f;
+    Vertices[0].z =  0.0f;
+
+    Vertices[1].x =  0.6f;
+    Vertices[1].y = -0.5f;
+    Vertices[1].z =  0.0f;
+
+    tap[0].x = 0.0f;
+    tap[0].y = 0.5f;
+    tap[0].z = 0.0f;
+
+    generateRotatePoints(Vertices, triangles, tap, 8) ;
+    cout << "Termino la funcion leer_datos_revo2" << endl;
+}
+
+void leer_datos_revo4(vector<_vertex3f> &Vertices, vector<_vertex3i> &triangles, vector<_vertex3f> &tap)  {
+
+
+    vector<_vertex3f> V(2);
+    tap.resize(1);
+    Vertices = V;
+
+    Vertices[0].x =  0.4f;
+    Vertices[0].y =  0.5f;
+    Vertices[0].z =  0.0f;
+
+    Vertices[1].x =  0.6f;
+    Vertices[1].y = -0.5f;
+    Vertices[1].z =  0.0f;
+
+    tap[0].x = 0.0f;
+    tap[0].y =-0.5f;
+    tap[0].z = 0.0f;
+
+    generateRotatePoints(Vertices, triangles, tap, 8) ;
+    cout << "Termino la funcion leer_datos_revo2" << endl;
 }
 
 
@@ -396,6 +484,7 @@ void normal_keys(unsigned char Tecla1,int x,int y)
 
 
 
+
     if(opcFiguraAux != opcFigura)   {
         opcFigura = opcFiguraAux;
         switch (opcFigura)  {
@@ -412,12 +501,12 @@ void normal_keys(unsigned char Tecla1,int x,int y)
                 leer_datos_ply(vertic, faces,  nombre_ply2);
                 break;   
             case 5:
-                leer_datos_rebo(Vertices, Caras);
+                leer_datos_revo(Vertices, Caras, Tapas);
                 break;
         } 
     }
     
-    if (opcFigura == 1 || opcFigura == 2 || opcFigura == 5)
+    if (opcFigura == 1 || opcFigura == 2 || opcFigura == 5)  
         draw(Vertices, Caras, opc);
     else 
         draw(vertic, faces, opc);
