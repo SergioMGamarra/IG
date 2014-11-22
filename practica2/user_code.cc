@@ -22,6 +22,24 @@ void draw_tetaedro() {
     glEnd();
 }
 
+void draw_alambre_revo (vector<_vertex3f> &vertices, vector<_vertex3i> &caras) {
+	glColor3f(0.0f, 0.0f, 0.0f);
+		for (int i = 0; i < caras.size(); ++i) {
+			glBegin(GL_LINES);
+				glVertex3f(vertices[caras[i]._0].x, vertices[caras[i]._0].y, vertices[caras[i]._0].z);
+				glVertex3f(vertices[caras[i]._1].x, vertices[caras[i]._1].y, vertices[caras[i]._1].z);
+			glEnd();
+			glBegin(GL_LINES);
+				glVertex3f(vertices[caras[i]._1].x, vertices[caras[i]._1].y, vertices[caras[i]._1].z);
+				glVertex3f(vertices[caras[i]._2].x, vertices[caras[i]._2].y, vertices[caras[i]._2].z);
+			glEnd();
+			glBegin(GL_LINES);
+				glVertex3f(vertices[caras[i]._2].x, vertices[caras[i]._2].y, vertices[caras[i]._2].z);
+				glVertex3f(vertices[caras[i]._0].x, vertices[caras[i]._0].y, vertices[caras[i]._0].z);
+			glEnd();
+
+		}
+}
 void draw_alambre (vector<_vertex3f> &vertices, vector<_vertex3i> &caras) {
 	glColor3f(0.0f, 0.0f, 0.0f);
 	glBegin(GL_LINES);
@@ -52,6 +70,17 @@ void draw_points (vector<_vertex3f> &vertices) {
 }
 
 void draw_ajedrez(vector<_vertex3f> &vertices, vector<_vertex3i> &caras) {
+	for (int i = 0; i < caras.size(); ++i) {
+		if (i%2==0)
+			glColor3f(1.0,0.0,0.0);
+		else 
+			glColor3f(0.0,0.0,1.0);
+
+		glVertex3f(vertices[caras[i]._0].x, vertices[caras[i]._0].y, vertices[caras[i]._0].z);
+		glVertex3f(vertices[caras[i]._1].x, vertices[caras[i]._1].y, vertices[caras[i]._1].z);
+		glVertex3f(vertices[caras[i]._2].x, vertices[caras[i]._2].y, vertices[caras[i]._2].z);
+	}
+
 	glColor3f(1.0f, 0.0f, 0.0f);
 	glBegin(GL_TRIANGLES);
 		for (int i = 0; i < caras.size(); i+=2) {
@@ -74,31 +103,68 @@ void draw_ajedrez(vector<_vertex3f> &vertices, vector<_vertex3i> &caras) {
 
 
 void generateRotatePoints(vector<_vertex3f> &vertices, vector<_vertex3i> &caras, vector<_vertex3f> &tapasV, int n)  {
-	cout << "Entro en generateRotatePoints" << endl;
-	double ang;
+	for(int i = 0; i < vertices.size(); ++i)
+		cout << i << ": " << vertices[i].x << endl;
+	float x, y, z;
 	int tapas = tapasV.size();
-
+	//a = 45 * 3.141592653589793 / 180.0;
+	//b = tan(a);
+	double ang = -30;
+	double ang2 = -270;
+	double ang1rad = ang * PI/180.0;
+	double ang2rad = ang2 * PI/180.0;
+	cout << ang1rad << endl;
 	tapas = tapasV.size();
-
 
 	int num_elem_orig = vertices.size();
 	vector<_vertex3f> tapa(2);
 
-	vertices.resize(num_elem_orig*n);
+	for (int i = 0; i < num_elem_orig; ++i){
+		x = vertices[i].x;
+		y = vertices[i].y;
+		z = vertices[i].z;
 
-	for (int i = num_elem_orig-1; i <= n-1; ++i) {
-		ang = i*((2*PI)/n);
+		vertices[i].x = x * cos(ang1rad) + z*sin(ang1rad);
+		vertices[i].y = y;
+		vertices[i].z = -x * sin(ang1rad) + z*cos(ang1rad);
+	}
+
+	vertices.resize(num_elem_orig*n);
+	
+	int m = n-1;
+
+	for (int i = num_elem_orig-1; i <= m; ++i) {
+		double ang = i*((ang2rad - ang1rad)/m);
 		for (int j = 0; j < num_elem_orig; ++j) {
 			vertices[i*num_elem_orig+j].x = vertices[j].x * cos(ang) + vertices[j].z*sin(ang);
 			vertices[i*num_elem_orig+j].y = vertices[j].y;
 			vertices[i*num_elem_orig+j].z = -vertices[j].x * sin(ang) + vertices[j].z*cos(ang);
-
 		}
 	}
+	// Obtenemos las caras
+    caras.clear();
+    caras.resize(0);
+    int contador = 0;
+    for (int i = 0; i < n-1; ++i)
+    {
+    	for (int j = 0; j < num_elem_orig-1; ++j)
+    	{
+    		caras.resize(caras.size()+2);
+    		//cara par
+    		caras[contador].x = i*num_elem_orig+j;
+    		caras[contador].y = i*num_elem_orig+(j+1);
+    		caras[contador].z = (i+1)*num_elem_orig+(j+1);
+
+    		//Cara impar
+    		caras[contador+1].x = i*num_elem_orig+j;
+    		caras[contador+1].y = (i+1)*num_elem_orig+(j+1);
+    		caras[contador+1].z = (i+1)*num_elem_orig+j;
+    		contador+=2;
+    	}
+    }
 
 	if (tapasV.size()>0)  {
 		if (tapasV.size()==1) {
-			cout << "Una tapa" << endl;
 			vertices.resize(vertices.size()+1);
 			vertices[vertices.size()-1]=tapasV[0];
 		} else {
@@ -108,87 +174,41 @@ void generateRotatePoints(vector<_vertex3f> &vertices, vector<_vertex3i> &caras,
 		}
 	}
 
-	// Obtenemos las caras
-	int mod=(vertices.size()-tapas);
-    //cout << "MODULOOOO" << modulo<<  endl;
-    int cuerpo=(vertices.size()-tapas)/n;    
-    caras.clear();
-    int faces=0;
- 
- 	for(int i=0;i<cuerpo-1;i++){ // me recorre los dos vertices que definen el cuerpo central del prisma
-        for(int c1=0,c2=0; c1<(n*2); c1+=2,c2++){ // -2 pra que quede hueco
-            faces=faces+2;            
-            caras.resize(faces);            
-            // cara par
-            caras[i*(n*2)+c1]._0 = (i+cuerpo*c2)%mod; // 0 // 2 // 4 // 0 // 2 // 4
-            caras[i*(n*2)+c1]._1 = ((i+cuerpo*c2)+cuerpo)%mod; // 2 // 4 // 0
-            caras[i*(n*2)+c1]._2 = ((i+cuerpo*c2)+1)%mod;// 1 // 3 // 5 // 1 // 3 // 5
-            //cout << Perfil_Caras[i*(n*2)+c1]._0 << "caras" <<endl;
-            // cara impar
-            caras[(i*(n*2)+c1)+1]._0 = ((i+cuerpo*c2)+cuerpo)%mod;
-            caras[(i*(n*2)+c1)+1]._1 = (((i+cuerpo*c2)+cuerpo)+1)%mod;
-            caras[(i*(n*2)+c1)+1]._2 = ((i+cuerpo*c2)+1)%mod;
-        }
-    }
-	/*for(int i = 0; i < cuerpo/n;++i) {
-		for(int c1=0, c2=0; c1<(n*2); c1+=2,c2++) {
-			faces+=2;
-			caras.resize(faces);
-			// cara par
-			caras[i*(n*2)+c1]._0 = (i+cuerpo*c2)%mod;
-			caras[i*(n*2)+c1]._1 = ((i+cuerpo*c2)+cuerpo)%mod; // 2 // 4 // 0
-            caras[i*(n*2)+c1]._2 = ((i+cuerpo*c2)+1)%mod;// 1 // 3 // 5 // 1 // 3 // 5
-            //cout << Perfil_Caras[i*(n*2)+c1]._0 << "caras" <<endl;
-            // cara impar
-            caras[(i*(n*2)+c1)+1]._0 = ((i+cuerpo*c2)+cuerpo)%mod;
-            caras[(i*(n*2)+c1)+1]._1 = (((i+cuerpo*c2)+cuerpo)+1)%mod;
-            caras[(i*(n*2)+c1)+1]._2 = ((i+cuerpo*c2)+1)%mod;
-
-		}
-	}*/
-
 	if(tapas==2){
-
         caras.resize(caras.size()+2*n);
-        for(int i=0;i<n;i++){
-            caras[caras.size()-n+i]._0 = (i*cuerpo)%mod; // 0 // 2 // 4 //
-            //cout << "1: " << caras[caras.size()-n+i]._0 << endl;
-            caras[caras.size()-n+i]._1 =  (i*cuerpo+2)%mod; // 2 // 4 //0
-            //cout << "2: " << caras[caras.size()-n+i]._1 << endl;
-            caras[caras.size()-n+i]._2 = vertices.size()-1; // 7 // 7 // 7 // 7
-            //cout << "3: " << caras[caras.size()-n+i]._2 << endl;
-        
-            caras[caras.size()-(2*n)+i]._0 = (i*cuerpo+1)%mod; // 0 // 2 // 4 //
-            //cout << "1: " << caras[caras.size()-(2*n)+i]._0 << endl;
-            caras[caras.size()-(2*n)+i]._1 =  (i*cuerpo+3)%mod; // 2 // 4 //0
-            //cout << "2: " << caras[caras.size()-(2*n)+i]._1 << endl;
-            caras[caras.size()-(2*n)+i]._2 = vertices.size()-2; // 8 // 8 // 8 //  
-            //cout << "3: " << caras[caras.size()-(2*n)+i]._2 << endl;
 
+        for(int i=0;i<n-1;i++, contador++){
+        	caras[contador].x = i*num_elem_orig;
+        	caras[contador].y = vertices.size()-1;
+        	caras[contador].z = (i+1)*num_elem_orig;
         }
+
+        for(int i=0;i<n-1;i++, contador++){
+        	caras[contador].x = num_elem_orig*i+(num_elem_orig-1);
+        	caras[contador].y = vertices.size()-2;
+        	caras[contador].z = (i+1)*num_elem_orig+(num_elem_orig-1);
+        }
+
     }
     else if (tapas == 1)  {
     	caras.resize(caras.size()+n);
     	if(vertices[0].y == tapasV[0].y)  {
     		for(int i=0;i<n;i++){
-	            caras[caras.size()-n+i]._0 = (i*cuerpo)%mod; // 0 // 2 // 4 //
-	            //cout << "1: " << caras[caras.size()-n+i]._0 << endl;
-	            caras[caras.size()-n+i]._1 =  (i*cuerpo+2)%mod; // 2 // 4 //0
-	            //cout << "2: " << caras[caras.size()-n+i]._1 << endl;
-	            caras[caras.size()-n+i]._2 = vertices.size()-1; // 7 // 7 // 7 // 7
-	            //cout << "3: " << caras[caras.size()-n+i]._2 << endl;
+	        	caras[contador+i].x = i*num_elem_orig;
+	        	caras[contador+i].y = vertices.size()-1;
+	        	caras[contador+i].z = (i+1)*num_elem_orig;
         	}
+
     	} else {
-    		for(int i=0;i<n;i++){
-				caras[caras.size()-n+i]._0 = (i*cuerpo+1)%mod; // 0 // 2 // 4 //
-        		//cout << "1: " << caras[caras.size()-(2*n)+i]._0 << endl;
-            	caras[caras.size()-n+i]._1 =  (i*cuerpo+3)%mod; // 2 // 4 //0
-            	//cout << "2: " << caras[caras.size()-(2*n)+i]._1 << endl;
-            	caras[caras.size()-n+i]._2 = vertices.size()-1; // 8 // 8 // 8 //  
-            	//cout << "3: " << caras[caras.size()-(2*n)+i]._2 << endl;
+    		for(int i=0;i<n;i++){        	
+    			caras[contador+i].x = num_elem_orig*i+(num_elem_orig-1);
+	        	caras[contador+i].y = vertices.size()-1;
+	        	caras[contador+i].z = (i+1)*num_elem_orig+(num_elem_orig-1);
+	        
             }
     	}
     }
+
 }
 
 
@@ -402,10 +422,12 @@ void Normales_Vertices(vector<_vertex3f> &vertices, vector<_vertex3i> &caras, ve
 //************************Funcion draw ++++++++++++++++++++++++++++++
 
 void draw (vector<_vertex3f> &vertices, vector<_vertex3i> &caras, int opc) {
-	if (opc == 1)
+	if (opc == 1) {
 		draw_points(vertices);
-	else if (opc == 2)
-		draw_alambre(vertices,caras);
+	}
+	else if (opc == 2)  {
+		draw_alambre_revo(vertices,caras);
+	}
 	else if (opc == 3) {
 		draw_solid(vertices,caras);
 	}

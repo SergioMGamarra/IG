@@ -40,6 +40,11 @@ vector<_vertex3f> Vertices;
 vector<_vertex3i> Caras;
 vector<_vertex3f> Tapas;
 
+vector<_vertex3f> Vertices2;
+vector<_vertex3i> Caras2;
+vector<_vertex3f> Tapas2;
+
+
 vector<float> vertic;
 vector<int> faces;
 
@@ -49,6 +54,7 @@ char *nombre_ply2;
 int opc = 1;
 int opcFigura = 5; 
 int opcFiguraAux = 5;
+int revoluciones;
 
 void FloatToVertexf(vector<float> &vect, vector<_vertex3f> &result) {
     result.resize(vect.size()/3);
@@ -265,46 +271,53 @@ void leer_datos_revo(vector<_vertex3f> &Vertices, vector<_vertex3i> &triangles, 
     Vertices = V;
 
     Vertices[0].x =  0.5f;
-    Vertices[0].y =  0.5f;
+    Vertices[0].y =  -0.5f;
     Vertices[0].z =  0.0f;
 
     Vertices[1].x =  0.5f;
-    Vertices[1].y = -0.5f;
+    Vertices[1].y = 0.5f;
     Vertices[1].z =  0.0f;
 
     tap[1].x = 0.0f;
-    tap[1].y = -0.5f;
+    tap[1].y = 0.5f;
     tap[1].z = 0.0f;
  
     tap[0].x = 0.0f;
-    tap[0].y = 0.5f;
+    tap[0].y = -0.5f;
     tap[0].z = 0.0f;
 
-    generateRotatePoints(Vertices, triangles, tap, 8) ;
+    generateRotatePoints(Vertices, triangles, tap, revoluciones) ;
     cout << "Termino la funcion leer_datos_revo" << endl;
 }
 
 void leer_datos_revo2(vector<_vertex3f> &Vertices, vector<_vertex3i> &triangles, vector<_vertex3f> &tap)  {
 
-
+    cout << "Leido revo 2" << endl;
     vector<_vertex3f> V(2);
     tap.resize(0);
+    tap.clear();
     Vertices = V;
 
     Vertices[0].x =  0.5f;
-    Vertices[0].y =  0.5f;
+    Vertices[0].y =  -0.5f;
     Vertices[0].z =  0.0f;
 
     Vertices[1].x =  0.5f;
-    Vertices[1].y = -0.5f;
+    Vertices[1].y =  0.5f;
     Vertices[1].z =  0.0f;
 
-    generateRotatePoints(Vertices, triangles, tap, 8) ;
+
+    tap[0].x = 0.0f;
+    tap[0].y = -0.5f;
+    tap[0].z = 0.0f;
+
+    generateRotatePoints(Vertices, triangles, tap, revoluciones) ;
     cout << "Termino la funcion leer_datos_revo2" << endl;
 }
 
 void leer_datos_revo3(vector<_vertex3f> &Vertices, vector<_vertex3i> &triangles, vector<_vertex3f> &tap)  {
 
+    cout << "Leido revo 3" << endl;
 
     vector<_vertex3f> V(2);
     tap.resize(1);
@@ -322,12 +335,13 @@ void leer_datos_revo3(vector<_vertex3f> &Vertices, vector<_vertex3i> &triangles,
     tap[0].y = 0.5f;
     tap[0].z = 0.0f;
 
-    generateRotatePoints(Vertices, triangles, tap, 8) ;
+    generateRotatePoints(Vertices, triangles, tap, revoluciones) ;
     cout << "Termino la funcion leer_datos_revo2" << endl;
 }
 
 void leer_datos_revo4(vector<_vertex3f> &Vertices, vector<_vertex3i> &triangles, vector<_vertex3f> &tap)  {
 
+    cout << "Leido revo 4" << endl;
 
     vector<_vertex3f> V(2);
     tap.resize(1);
@@ -341,11 +355,7 @@ void leer_datos_revo4(vector<_vertex3f> &Vertices, vector<_vertex3i> &triangles,
     Vertices[1].y = -0.5f;
     Vertices[1].z =  0.0f;
 
-    tap[0].x = 0.0f;
-    tap[0].y =-0.5f;
-    tap[0].z = 0.0f;
-
-    generateRotatePoints(Vertices, triangles, tap, 8) ;
+    generateRotatePoints(Vertices, triangles, tap, revoluciones) ;
     cout << "Termino la funcion leer_datos_revo2" << endl;
 }
 
@@ -411,11 +421,7 @@ glEnd();
 
 
 void draw_menu(int Opc, int OpcFig) {
-    if (OpcFig == 1 || opcFigura == 2 || opcFigura == 5) {
         draw(Vertices, Caras, opc);
-    }else {
-        draw(vertic, faces, opc);
-    }
 }
 
 
@@ -480,7 +486,6 @@ void normal_keys(unsigned char Tecla1,int x,int y)
     if (toupper(Tecla1)=='2') opcFiguraAux = 2;
     if (toupper(Tecla1)=='3') opcFiguraAux = 3;
     if (toupper(Tecla1)=='4') opcFiguraAux = 4;
-    if (toupper(Tecla1)=='5') opcFiguraAux = 5;
 
 
 
@@ -489,30 +494,24 @@ void normal_keys(unsigned char Tecla1,int x,int y)
         opcFigura = opcFiguraAux;
         switch (opcFigura)  {
             case 1:
-                leer_datos_cubo(Vertices, Caras);
+                leer_datos_revo(Vertices, Caras, Tapas);
+                //leer_datos_cubo(Vertices, Caras);
                 break;
             case 2:
-                leer_datos_tetraedro(Vertices, Caras);
+                leer_datos_revo4(Vertices, Caras, Tapas); // sin tapas
                 break;
             case 3:
-                leer_datos_ply(vertic, faces,  nombre_ply);
-                break;                
+                leer_datos_revo2(Vertices, Caras, Tapas);
+                break;
             case 4:
-                leer_datos_ply(vertic, faces,  nombre_ply2);
-                break;   
-            case 5:
-                leer_datos_revo(Vertices, Caras, Tapas);
+                leer_datos_revo3(Vertices, Caras, Tapas);
                 break;
         } 
     }
-    
-    if (opcFigura == 1 || opcFigura == 2 || opcFigura == 5)  
-        draw(Vertices, Caras, opc);
-    else 
-        draw(vertic, faces, opc);
+
+    draw(Vertices, Caras, opc);
     
     glutPostRedisplay();
-
 }
 
 //***************************************************************************
@@ -578,14 +577,14 @@ glViewport(0,0,UI_window_width,UI_window_height);
 
 int main(int argc, char **argv)
 {
-
-    if (argc > 2) {
+    revoluciones = atoi(argv[1]);
+    /*if (argc > 2) {
         nombre_ply = argv[1];
         nombre_ply2 = argv[2];
-    }
+    }*/
 
 
-    leer_datos_cubo(Vertices, Caras);
+    leer_datos_revo(Vertices, Caras, Tapas);
     //leer_datos_tetraedro(Vertices, Caras);
 
 
