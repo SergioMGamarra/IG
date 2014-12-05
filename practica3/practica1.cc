@@ -44,7 +44,6 @@ vector<_vertex3f> Vertices2;
 vector<_vertex3i> Caras2;
 vector<_vertex3f> Tapas2;
 
-
 vector<float> vertic;
 vector<int> faces;
 
@@ -55,6 +54,11 @@ int opc = 1;
 int opcFigura = 5; 
 int opcFiguraAux = 5;
 int revoluciones;
+
+int grado_rotatoria = 0;
+int translacion_carga = 0;
+int tamanio_hilos = 10;
+int movimiento_lateral = 0;
 
 void FloatToVertexf(vector<float> &vect, vector<_vertex3f> &result) {
     result.resize(vect.size()/3);
@@ -360,6 +364,484 @@ void leer_datos_revo4(vector<_vertex3f> &Vertices, vector<_vertex3i> &triangles,
 }
 
 
+/****************************************************************
+/*
+/*
+/*          PRACTICA 3
+/*
+/*
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+
+
+void cubo (vector<_vertex3f> vertices, vector<_vertex3i> caras) {
+/*
+  // LADO TRASERO: lado blanco
+    vertices.resize(8);
+    caras.resize(12);
+    // Vertices frontales
+    vertices[0].x = -0.5; vertices[0].y =  0.5; vertices[0].z =  0.5;
+    vertices[1].x = -0.5; vertices[1].y = -0.5; vertices[1].z =  0.5;
+    vertices[2].x =  0.5; vertices[2].y = -0.5; vertices[2].z =  0.5;
+    vertices[3].x =  0.5; vertices[3].y =  0.5; vertices[3].z =  0.5;
+    
+    // Vertices traseros
+    vertices[4].x = -0.5; vertices[4].y =  0.5; vertices[4].z = -0.5;
+    vertices[5].x = -0.5; vertices[5].y = -0.5; vertices[5].z = -0.5;
+    vertices[6].x =  0.5; vertices[6].y = -0.5; vertices[6].z = -0.5;
+    vertices[7].x =  0.5; vertices[7].y =  0.5; vertices[7].z = -0.5;
+*/
+
+glBegin(GL_POLYGON);
+glVertex3f(  0.5, -0.5, 0.5 ); //2
+glVertex3f(  0.5,  0.5, 0.5 ); // 3
+glVertex3f( -0.5,  0.5, 0.5 ); // 0
+glVertex3f( -0.5, -0.5, 0.5 ); // 1
+glEnd();
+ 
+// LADO DERECHO: lado morado
+glBegin(GL_POLYGON);
+glVertex3f( 0.5, -0.5, -0.5 ); // 6
+glVertex3f( 0.5,  0.5, -0.5 ); // 7
+glVertex3f( 0.5,  0.5,  0.5 ); // 3
+glVertex3f( 0.5, -0.5,  0.5 ); // 2
+glEnd();
+ 
+// LADO IZQUIERDO: lado verde
+glBegin(GL_POLYGON);
+glVertex3f( -0.5, -0.5,  0.5 ); // 1
+glVertex3f( -0.5,  0.5,  0.5 ); // 0
+glVertex3f( -0.5,  0.5, -0.5 ); // 4
+glVertex3f( -0.5, -0.5, -0.5 ); // 5
+glEnd();
+ 
+// LADO SUPERIOR: lado azul
+glBegin(GL_POLYGON);
+glVertex3f(  0.5,  0.5,  0.5 );
+glVertex3f(  0.5,  0.5, -0.5 );
+glVertex3f( -0.5,  0.5, -0.5 );
+glVertex3f( -0.5,  0.5,  0.5 );
+glEnd();
+ 
+// LADO INFERIOR: lado rojo
+glBegin(GL_POLYGON);
+glVertex3f(  0.5, -0.5, -0.5 );
+glVertex3f(  0.5, -0.5,  0.5 );
+glVertex3f( -0.5, -0.5,  0.5 );
+glVertex3f( -0.5, -0.5, -0.5 );
+glEnd();
+
+  // LADO TRASERO: lado blanco
+glBegin(GL_POLYGON);
+glVertex3f(  0.5, -0.5, -0.5 );
+glVertex3f(  0.5,  0.5, -0.5 );
+glVertex3f( -0.5,  0.5, -0.5 );
+glVertex3f( -0.5, -0.5, -0.5 );
+glEnd();
+
+
+glBegin(GL_POLYGON);
+glVertex3f(  0.5, -0.5, 0.5 );
+glVertex3f(  0.5,  0.5, 0.5 );
+glVertex3f( -0.5,  0.5, 0.5 );
+glVertex3f( -0.5, -0.5, 0.5 );
+glEnd();
+ 
+// LADO DERECHO: lado morado
+glBegin(GL_POLYGON);
+glVertex3f( 0.5, -0.5, -0.5 );
+glVertex3f( 0.5,  0.5, -0.5 );
+glVertex3f( 0.5,  0.5,  0.5 );
+glVertex3f( 0.5, -0.5,  0.5 );
+glEnd();
+ 
+// LADO IZQUIERDO: lado verde
+glBegin(GL_POLYGON);
+glVertex3f( -0.5, -0.5,  0.5 );
+glVertex3f( -0.5,  0.5,  0.5 );
+glVertex3f( -0.5,  0.5, -0.5 );
+glVertex3f( -0.5, -0.5, -0.5 );
+glEnd();
+ 
+// LADO SUPERIOR: lado azul
+glBegin(GL_POLYGON);
+glVertex3f(  0.5,  0.5,  0.5 );
+glVertex3f(  0.5,  0.5, -0.5 );
+glVertex3f( -0.5,  0.5, -0.5 );
+glVertex3f( -0.5,  0.5,  0.5 );
+glEnd();
+ 
+// LADO INFERIOR: lado rojo
+glBegin(GL_POLYGON);
+glVertex3f(  0.5, -0.5, -0.5 );
+glVertex3f(  0.5, -0.5,  0.5 );
+glVertex3f( -0.5, -0.5,  0.5 );
+glVertex3f( -0.5, -0.5, -0.5 );
+glEnd();
+
+  // LADO TRASERO: lado blanco
+glBegin(GL_POLYGON);
+glVertex3f(  0.5, -0.5, -0.5 );
+glVertex3f(  0.5,  0.5, -0.5 );
+glVertex3f( -0.5,  0.5, -0.5 );
+glVertex3f( -0.5, -0.5, -0.5 );
+glEnd();
+
+
+/*
+    caras[0].x = 0;
+    caras[0].y = 1;
+    caras[0].z = 3;
+
+    caras[1].x = 1;
+    caras[1].y = 2;
+    caras[1].z = 3;
+
+//------------------------
+
+    caras[2].x = 2;
+    caras[2].y = 5;
+    caras[2].z = 1;
+
+    caras[3].x = 2;
+    caras[3].y = 6;
+    caras[3].z = 5;
+
+//------------------------
+
+    caras[4].x = 7;
+    caras[4].y = 4;
+    caras[4].z = 0;
+
+    caras[5].x = 7;
+    caras[5].y = 3;
+    caras[5].z = 0;
+
+//-----------------------
+
+    caras[6].x = 7;
+    caras[6].y = 3;
+    caras[6].z = 2;
+
+    caras[7].x = 6;
+    caras[7].y = 2;
+    caras[7].z = 7;
+
+
+//----------------------
+
+    caras[8].x = 4;
+    caras[8].y = 6;
+    caras[8].z = 7;
+
+    caras[9].x = 6;
+    caras[9].y = 5;
+    caras[9].z = 4;
+
+//----------------------
+
+    caras[10].x = 0;
+    caras[10].y = 4;
+    caras[10].z = 5;
+
+    caras[11].x = 0;
+    caras[11].y = 5;
+    caras[11].z = 1;
+*/
+}
+
+void cubo_carga(const vector<_vertex3f> &vertices, const vector<_vertex3i> &caras)  {
+    glPushMatrix();
+        glColor3f(0.2,0.2,0.2);
+        glScalef(10.0, 4.0, 10.0);
+        cubo(Vertices, Caras);
+    glPopMatrix();
+
+}
+
+
+void palo(const vector<_vertex3f> &vertices, const vector<_vertex3i> &caras)  {
+    glPushMatrix();
+        glColor3f(0.0,0.0,1.0);
+        glScalef(0.5, 0.5, 5.5);
+        cubo(Vertices, Caras);
+    glPopMatrix();
+}
+
+void palo_transversal(const vector<_vertex3f> &vertices, const vector<_vertex3i> &caras)  {
+    glPushMatrix();
+        glColor3f(0.0,0.0,1.0);
+        glScalef(0.5, 0.5, 6.5);
+        cubo(Vertices, Caras);
+    glPopMatrix();
+}
+
+
+void seccion_cubo_altura(const vector<_vertex3f> &vertices, const vector<_vertex3i> &caras) {
+    glPushMatrix();
+        glTranslatef(0.0, 2.5, 0.0);
+        glRotatef(90.0, 0, 1, 0);
+        palo(Vertices, Caras);
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(2.5, 0.0, 0.0);
+        glRotatef(90.0, 0, 1, 0);
+        glRotatef(90.0, 1, 0, 0);
+        palo(Vertices, Caras);
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0.0, -2.5, 0.0);
+        glRotatef(90.0, 0, 1, 0);
+        palo(Vertices, Caras);
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(-2.5, 0.0, 0.0);
+        glRotatef(90.0, 0, 1, 0);
+        glRotatef(90.0, 1, 0, 0);
+        palo(Vertices, Caras);
+    glPopMatrix();
+    glPushMatrix();
+        glRotatef(90.0, 0, 1, 0);
+        glRotatef(45.0, 1, 0, 0);
+        palo_transversal(Vertices, Caras);
+    glPopMatrix();
+
+}
+
+void seccion_altura(const vector<_vertex3f> &vertices, const vector<_vertex3i> &caras) {
+    glPushMatrix();
+        glTranslatef(0,0,2.5);
+        seccion_cubo_altura(Vertices, Caras);
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0,0,-2.5);
+        seccion_cubo_altura(Vertices, Caras);
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(-2.5,0,0);
+        glRotatef(90.0,0, 1,0);
+        seccion_cubo_altura(Vertices, Caras);
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(3.0,0,0);
+        glRotatef(90.0,0, 1,0);
+        seccion_cubo_altura(Vertices, Caras);
+    glPopMatrix();
+}
+
+void altura(const vector<_vertex3f> &vertices, const vector<_vertex3i> &caras)  {
+    glPushMatrix();
+        glTranslatef(0.0,2.5,0);
+        seccion_altura(Vertices, Caras);
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0.0,8.0,0);
+        seccion_altura(Vertices, Caras);
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0.0,13.0,0);
+        seccion_altura(Vertices, Caras);
+    glPopMatrix();    
+    glPushMatrix();
+        glTranslatef(0.0,18.0,0);
+        seccion_altura(Vertices, Caras);
+    glPopMatrix();    
+    glPushMatrix();
+        glTranslatef(0.0,23.0,0);
+        seccion_altura(Vertices, Caras);
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0.0,28.0,0);
+        seccion_altura(Vertices, Caras);
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0.0,33.0,0);
+        seccion_altura(Vertices, Caras);
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0.0,38.0,0);
+        seccion_altura(Vertices, Caras);
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0.0,43.0,0);
+        seccion_altura(Vertices, Caras);
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0.0,48.0,0);
+        seccion_altura(Vertices, Caras);
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0.0,53.0,0);
+        seccion_altura(Vertices, Caras);
+    glPopMatrix();
+}
+
+
+void torre_altura(const vector<_vertex3f> &vertices, const vector<_vertex3i> &caras)  {
+    glPushMatrix();
+        glTranslatef(0.0,0,0);
+        cubo_carga(Vertices, Caras);
+    glPopMatrix();
+    glPushMatrix();
+        altura(Vertices, Caras);
+    glPopMatrix();
+}
+
+void torre_horizontal(const vector<_vertex3f> &vertices, const vector<_vertex3i> &caras)  {
+    glPushMatrix();
+        glTranslatef((53.0/2),53.0,0.0);
+        glRotatef(90.0,0,0,1);
+        altura(Vertices, Caras);
+    glPopMatrix();
+
+}
+
+void union_secciones(const vector<_vertex3f> &vertices, const vector<_vertex3i> &caras) {
+    glPushMatrix();
+        glRotatef(90.0,0,1,0);
+        torre_horizontal(Vertices, Caras);
+    glPopMatrix();
+
+
+}
+
+void seccion_grua(const vector<_vertex3f> &vertices, const vector<_vertex3i> &caras)  {
+    glPushMatrix();
+        glTranslatef((53.0/2-2.25),0.0,0.0);
+        torre_altura(Vertices, Caras);
+    glPopMatrix();
+    glPushMatrix();
+        torre_horizontal(Vertices, Caras);
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(-(53.0/2),0.0,0.0);
+        torre_altura(Vertices, Caras);
+    glPopMatrix();
+
+}
+
+void plataforma_carga(const vector<_vertex3f> &vertices, const vector<_vertex3i> &caras) {
+    glPushMatrix();
+        glTranslatef(0.0,58,0.0);
+        glColor3f(0.0,0.0,0.0);
+        glScalef(8.0,3.0,58.0);
+        cubo(Vertices, Caras);
+    glPopMatrix();
+
+}
+
+void plataforma_rotatoria(const vector<_vertex3f> &vertices, const vector<_vertex3i> &caras) {
+    glPushMatrix();
+        glTranslatef(0.0,55,0.0);
+        glColor3f(0.2,0.2,0.2);
+        glScalef(8.0,3.0,8.0);
+        cubo(Vertices, Caras);
+    glPopMatrix();
+
+}
+
+void hilo(int tamanio, const vector<_vertex3f> &vertices, const vector<_vertex3i> &caras) {
+
+    glPushMatrix();
+        glTranslatef(0.0,55.0,0.0);
+        glTranslatef(0.0, -tamanio/2, 0.0);
+        glColor3f(0.7,0.0,0.0);
+        glScalef(1.0,3.0+tamanio,1.0);
+        cubo(Vertices, Caras);
+    glPopMatrix();
+
+}
+
+void caja( vector<_vertex3f> &vertices, vector<_vertex3i> &caras) {
+
+    glPushMatrix();
+        glColor3f(0.3,0.3,1.0);
+        glTranslatef(0.0,53,0.0);
+        glScalef(8.0,8.0,8.0);
+        cubo(vertices, caras);
+    glPopMatrix();
+}
+
+void control_animacion() {
+    // 1. Control movimiento lateral
+    // cout << "movimiento_lateral: " << movimiento_lateral << endl;
+    if (movimiento_lateral < -18) movimiento_lateral = -18;
+    else if (movimiento_lateral > 18) movimiento_lateral = 18;
+
+    // 2.Control tamaño hilos
+    // cout << "tamanio_hilos: " << tamanio_hilos << endl;
+    if (tamanio_hilos < 3) tamanio_hilos = 3;
+    else if(tamanio_hilos > 50) tamanio_hilos = 50;
+
+    // 3. Control movimiento de plataforma rotatoria
+    // cout << "translacion_carga: " << translacion_carga << endl;
+    if (translacion_carga < -19) translacion_carga = -19;
+    else if(translacion_carga > 16) translacion_carga = 16;
+
+}
+
+
+void grua(vector<_vertex3f> &vertices, vector<_vertex3i> &caras) {
+    control_animacion();    
+    glMatrixMode(GL_MODELVIEW);
+
+
+    // Seccion delantera
+    glPushMatrix();
+        glTranslatef(0.0,0.0,(53.0/2));
+        seccion_grua(vertices, caras);
+    glPopMatrix();
+
+    // Seccion trasera
+    glPushMatrix();
+        glTranslatef(0.0,0.0,-(53.0/2));
+        seccion_grua(vertices, caras);
+    glPopMatrix();
+
+    // Uniones
+    glPushMatrix();
+        glTranslatef((53.0/2)-2.25,0.0,0.0);
+        union_secciones(vertices, caras);
+    glPopMatrix();
+
+    glPushMatrix();
+        glTranslatef(-((53.0/2)),0.0,0.0);
+        union_secciones(vertices, caras);
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(translacion_carga, 0.0,0.0);
+        glPushMatrix();
+            plataforma_carga(vertices, caras);
+        glPopMatrix();
+        glPushMatrix();
+            glTranslatef(0.0,0.0, movimiento_lateral);
+            glRotatef(grado_rotatoria, 0, 1, 0);
+            glPushMatrix();
+                plataforma_rotatoria(vertices, caras);
+            glPopMatrix();
+
+            glPushMatrix();
+                glPushMatrix();
+                    glTranslatef(0.0,0.0,3.0);
+                    hilo(tamanio_hilos, vertices, caras);
+                glPopMatrix();
+
+                glPushMatrix();
+                    glTranslatef(0.0,0.0,-3.0);
+                    hilo(tamanio_hilos, vertices, caras);
+                glPopMatrix();
+            glPopMatrix();
+
+            glPushMatrix();
+                glTranslatef(0.0, -tamanio_hilos,0.0);
+                caja(vertices, caras);
+            glPopMatrix();
+        glPopMatrix();
+    glPopMatrix();
+    
+}
+
+
+
 void clear_window()
 {
 
@@ -377,7 +859,7 @@ void change_projection()
 glMatrixMode(GL_PROJECTION);
 glLoadIdentity();
 
-// formato(x_minimo,x_maximo, y_minimo, y_maximo,Front_plane, plano_traser)
+// formato(x_minimo,x_maximo, y_minimqo, y_maximo,Front_plane, plano_traser)
 //  Front_plane>0  Back_plane>PlanoDelantero)
 glFrustum(-Window_width,Window_width,-Window_height,Window_height,Front_plane,Back_plane);
 }
@@ -429,8 +911,9 @@ void draw_menu(int Opc, int OpcFig) {
 // Funcion que dibuja los objetos
 //***************************************************************************
 
-void draw_objects()
+void draw_objects(vector<_vertex3f> vertices, vector<_vertex3i> caras)
 {
+    grua(Vertices, Caras);
     draw_menu(opc, opcFigura);
 
 }
@@ -444,7 +927,7 @@ void draw_scene(void)
 clear_window();
 change_observer();
 draw_axis();
-draw_objects();
+draw_objects(Vertices, Caras);
 glutSwapBuffers();
 }
 
@@ -482,6 +965,16 @@ void normal_keys(unsigned char Tecla1,int x,int y)
     if (toupper(Tecla1)=='A') opc = 2;
     if (toupper(Tecla1)=='S') opc = 3;
     if (toupper(Tecla1)=='C') opc = 4;
+    if (toupper(Tecla1)=='M') grado_rotatoria++;
+    if (toupper(Tecla1)=='N') grado_rotatoria--;
+    if (toupper(Tecla1)=='K') translacion_carga++;
+    if (toupper(Tecla1)=='J') translacion_carga--;
+    if (toupper(Tecla1)=='U') tamanio_hilos++;
+    if (toupper(Tecla1)=='I') tamanio_hilos--;
+    if (toupper(Tecla1)=='G') movimiento_lateral++;
+    if (toupper(Tecla1)=='H') movimiento_lateral--;
+
+
     if (toupper(Tecla1)=='1') opcFiguraAux = 1;
     if (toupper(Tecla1)=='2') opcFiguraAux = 2;
     if (toupper(Tecla1)=='3') opcFiguraAux = 3;
@@ -489,7 +982,7 @@ void normal_keys(unsigned char Tecla1,int x,int y)
 
 
 
-
+/*
     if(opcFiguraAux != opcFigura)   {
         opcFigura = opcFiguraAux;
         switch (opcFigura)  {
@@ -508,7 +1001,7 @@ void normal_keys(unsigned char Tecla1,int x,int y)
                 break;
         } 
     }
-
+*/
     draw(Vertices, Caras, opc);
     
     glutPostRedisplay();
@@ -553,7 +1046,7 @@ Front_plane=1;
 Back_plane=1000;
 
 // se inicia la posicion del observador, en el eje z
-Observer_distance=3*Front_plane;
+Observer_distance=200*Front_plane;
 Observer_angle_x=0;
 Observer_angle_y=0;
 
@@ -577,22 +1070,6 @@ glViewport(0,0,UI_window_width,UI_window_height);
 
 int main(int argc, char **argv)
 {
-    if (argc < 2) {
-        cout << "Falta el número de revoluciones" << endl;
-        return 0;
-    }
-
-    revoluciones = atoi(argv[1]);
-    /*if (argc > 2) {
-        nombre_ply = argv[1];
-        nombre_ply2 = argv[2];
-    }*/
-
-
-    leer_datos_revo(Vertices, Caras, Tapas);
-    //leer_datos_tetraedro(Vertices, Caras);
-
-
 
     // se llama a la inicialización de glut
     glutInit(&argc, argv);
@@ -630,7 +1107,10 @@ int main(int argc, char **argv)
     // funcion de inicialización
     initialize();
 
+
+
     // inicio del bucle de eventos
     glutMainLoop();
+
     return 0;
 }

@@ -360,6 +360,299 @@ void leer_datos_revo4(vector<_vertex3f> &Vertices, vector<_vertex3i> &triangles,
 }
 
 
+/****************************************************************
+/*
+/*
+/*          PRACTICA 3
+/*
+/*
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+
+
+void cubo () {
+
+  // LADO TRASERO: lado blanco
+glBegin(GL_POLYGON);
+glVertex3f(  0.5, -0.5, 0.5 );
+glVertex3f(  0.5,  0.5, 0.5 );
+glVertex3f( -0.5,  0.5, 0.5 );
+glVertex3f( -0.5, -0.5, 0.5 );
+glEnd();
+ 
+// LADO DERECHO: lado morado
+glBegin(GL_POLYGON);
+glVertex3f( 0.5, -0.5, -0.5 );
+glVertex3f( 0.5,  0.5, -0.5 );
+glVertex3f( 0.5,  0.5,  0.5 );
+glVertex3f( 0.5, -0.5,  0.5 );
+glEnd();
+ 
+// LADO IZQUIERDO: lado verde
+glBegin(GL_POLYGON);
+glVertex3f( -0.5, -0.5,  0.5 );
+glVertex3f( -0.5,  0.5,  0.5 );
+glVertex3f( -0.5,  0.5, -0.5 );
+glVertex3f( -0.5, -0.5, -0.5 );
+glEnd();
+ 
+// LADO SUPERIOR: lado azul
+glBegin(GL_POLYGON);
+glVertex3f(  0.5,  0.5,  0.5 );
+glVertex3f(  0.5,  0.5, -0.5 );
+glVertex3f( -0.5,  0.5, -0.5 );
+glVertex3f( -0.5,  0.5,  0.5 );
+glEnd();
+ 
+// LADO INFERIOR: lado rojo
+glBegin(GL_POLYGON);
+glVertex3f(  0.5, -0.5, -0.5 );
+glVertex3f(  0.5, -0.5,  0.5 );
+glVertex3f( -0.5, -0.5,  0.5 );
+glVertex3f( -0.5, -0.5, -0.5 );
+glEnd();
+
+  // LADO TRASERO: lado blanco
+glBegin(GL_POLYGON);
+glVertex3f(  0.5, -0.5, -0.5 );
+glVertex3f(  0.5,  0.5, -0.5 );
+glVertex3f( -0.5,  0.5, -0.5 );
+glVertex3f( -0.5, -0.5, -0.5 );
+glEnd();
+
+/*
+    Vertices.clear();
+    Caras.clear();
+    Vertices.resize(8);
+    Caras.resize(12);
+
+    // Vertices frontales
+    Vertices[0].x = -0.5; Vertices[0].y =  0.5; Vertices[0].z =  0.5;
+    Vertices[1].x = -0.5; Vertices[1].y = -0.5; Vertices[1].z =  0.5;
+    Vertices[2].x =  0.5; Vertices[2].y = -0.5; Vertices[2].z =  0.5;
+    Vertices[3].x =  0.5; Vertices[3].y =  0.5; Vertices[3].z =  0.5;
+    
+    // Vertices traseros
+    Vertices[4].x = -0.5; Vertices[4].y =  0.5; Vertices[4].z = -0.5;
+    Vertices[5].x = -0.5; Vertices[5].y = -0.5; Vertices[5].z = -0.5;
+    Vertices[6].x =  0.5; Vertices[6].y = -0.5; Vertices[6].z = -0.5;
+    Vertices[7].x =  0.5; Vertices[7].y =  0.5; Vertices[7].z = -0.5;
+
+
+    Caras[0].x = 0;
+    Caras[0].y = 1;
+    Caras[0].z = 3;
+
+    Caras[1].x = 1;
+    Caras[1].y = 2;
+    Caras[1].z = 3;
+
+//------------------------
+
+    Caras[2].x = 2;
+    Caras[2].y = 5;
+    Caras[2].z = 1;
+
+    Caras[3].x = 2;
+    Caras[3].y = 6;
+    Caras[3].z = 5;
+
+//------------------------
+
+    Caras[4].x = 7;
+    Caras[4].y = 4;
+    Caras[4].z = 0;
+
+    Caras[5].x = 7;
+    Caras[5].y = 3;
+    Caras[5].z = 0;
+
+//-----------------------
+
+    Caras[6].x = 7;
+    Caras[6].y = 3;
+    Caras[6].z = 2;
+
+    Caras[7].x = 6;
+    Caras[7].y = 2;
+    Caras[7].z = 7;
+
+
+//----------------------
+
+    Caras[8].x = 4;
+    Caras[8].y = 6;
+    Caras[8].z = 7;
+
+    Caras[9].x = 6;
+    Caras[9].y = 5;
+    Caras[9].z = 4;
+
+//----------------------
+
+    Caras[10].x = 0;
+    Caras[10].y = 4;
+    Caras[10].z = 5;
+
+    Caras[11].x = 0;
+    Caras[11].y = 5;
+    Caras[11].z = 1;*/
+}
+
+void cubo_carga()  {
+    glPushMatrix();
+        glColor3f(0.2,0.2,0.2);
+        glScalef(10.0, 4.0, 10.0);
+        cubo();
+    glPopMatrix();
+
+}
+
+void cubo_transicion() {
+    glPushMatrix();
+        glColor3f(0.2,0.2,0.2);
+        glScalef(5.5, 0.8, 5.5);
+        cubo();
+    glPopMatrix();
+}
+
+void palo()  {
+    glPushMatrix();
+        glColor3f(1.0,0.8,0.2);
+        glScalef(0.5, 0.5, 5.5);
+        cubo();
+    glPopMatrix();
+}
+
+void palo_transversal()  {
+    glPushMatrix();
+        glColor3f(1.0,0.8,0.2);
+        glScalef(0.5, 0.5, 6.5);
+        cubo();
+    glPopMatrix();
+}
+
+
+void seccion_cubo_altura() {
+    glPushMatrix();
+        glTranslatef(0.0, 2.5, 0.0);
+        glRotatef(90.0, 0, 1, 0);
+        palo();
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(2.5, 0.0, 0.0);
+        glRotatef(90.0, 0, 1, 0);
+        glRotatef(90.0, 1, 0, 0);
+        palo();
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0.0, -2.5, 0.0);
+        glRotatef(90.0, 0, 1, 0);
+        palo();
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(-2.5, 0.0, 0.0);
+        glRotatef(90.0, 0, 1, 0);
+        glRotatef(90.0, 1, 0, 0);
+        palo();
+    glPopMatrix();
+    glPushMatrix();
+        glRotatef(90.0, 0, 1, 0);
+        glRotatef(45.0, 1, 0, 0);
+        palo_transversal();
+    glPopMatrix();
+
+}
+
+void seccion_altura() {
+    glPushMatrix();
+        glTranslatef(0,0,2.5);
+        seccion_cubo_altura();
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0,0,-2.5);
+        seccion_cubo_altura();
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(-2.5,0,0);
+        glRotatef(90.0,0, 1,0);
+        seccion_cubo_altura();
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(3.0,0,0);
+        glRotatef(90.0,0, 1,0);
+        seccion_cubo_altura();
+    glPopMatrix();
+}
+
+void altura()  {
+    glPushMatrix();
+        glTranslatef(0.0,0,0);
+        cubo_carga();
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0.0,2.5,0);
+        seccion_altura();
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0.0,8.0,0);
+        seccion_altura();
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0.0,13.0,0);
+        seccion_altura();
+    glPopMatrix();    
+    glPushMatrix();
+        glTranslatef(0.0,18.0,0);
+        seccion_altura();
+    glPopMatrix();    
+    glPushMatrix();
+        glTranslatef(0.0,23.0,0);
+        seccion_altura();
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0.0,28.0,0);
+        seccion_altura();
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0.0,33.0,0);
+        seccion_altura();
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0.0,38.0,0);
+        seccion_altura();
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0.0,43.0,0);
+        seccion_altura();
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0.0,48.0,0);
+        seccion_altura();
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0.0,53.0,0);
+        seccion_altura();
+    glPopMatrix();
+}
+
+void brazo(){
+    glPushMatrix();
+
+    glPopMatrix();
+}
+
+
+void grua() {
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    brazo();
+
+    glPopMatrix();
+
+}
+
+
+
 void clear_window()
 {
 
@@ -431,7 +724,8 @@ void draw_menu(int Opc, int OpcFig) {
 
 void draw_objects()
 {
-    draw_menu(opc, opcFigura);
+    grua();
+    //draw_menu(opc, opcFigura);
 
 }
 
@@ -482,14 +776,14 @@ void normal_keys(unsigned char Tecla1,int x,int y)
     if (toupper(Tecla1)=='A') opc = 2;
     if (toupper(Tecla1)=='S') opc = 3;
     if (toupper(Tecla1)=='C') opc = 4;
-    if (toupper(Tecla1)=='1') opcFiguraAux = 1;
-    if (toupper(Tecla1)=='2') opcFiguraAux = 2;
+    //if (toupper(Tecla1)=='1') opcFiguraAux = 1;
+   /* if (toupper(Tecla1)=='2') opcFiguraAux = 2;
     if (toupper(Tecla1)=='3') opcFiguraAux = 3;
     if (toupper(Tecla1)=='4') opcFiguraAux = 4;
+*/
 
 
-
-
+/*
     if(opcFiguraAux != opcFigura)   {
         opcFigura = opcFiguraAux;
         switch (opcFigura)  {
@@ -508,7 +802,7 @@ void normal_keys(unsigned char Tecla1,int x,int y)
                 break;
         } 
     }
-
+*/
     draw(Vertices, Caras, opc);
     
     glutPostRedisplay();
@@ -553,7 +847,7 @@ Front_plane=1;
 Back_plane=1000;
 
 // se inicia la posicion del observador, en el eje z
-Observer_distance=3*Front_plane;
+Observer_distance=200*Front_plane;
 Observer_angle_x=0;
 Observer_angle_y=0;
 
@@ -577,22 +871,6 @@ glViewport(0,0,UI_window_width,UI_window_height);
 
 int main(int argc, char **argv)
 {
-    if (argc < 2) {
-        cout << "Falta el número de revoluciones" << endl;
-        return 0;
-    }
-
-    revoluciones = atoi(argv[1]);
-    /*if (argc > 2) {
-        nombre_ply = argv[1];
-        nombre_ply2 = argv[2];
-    }*/
-
-
-    leer_datos_revo(Vertices, Caras, Tapas);
-    //leer_datos_tetraedro(Vertices, Caras);
-
-
 
     // se llama a la inicialización de glut
     glutInit(&argc, argv);
@@ -630,7 +908,10 @@ int main(int argc, char **argv)
     // funcion de inicialización
     initialize();
 
+
+
     // inicio del bucle de eventos
     glutMainLoop();
+
     return 0;
 }
