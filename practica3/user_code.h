@@ -24,6 +24,7 @@ void draw_cube(vector<_vertex3f> &vertices, vector<_vertex3i> &caras);
 void draw_tetrahedron();
 void draw_vertices(vector<float> &Vertices);
 void draw_alambre (vector<_vertex3f> &vertices, vector<_vertex3i> &caras);
+void draw_alambre_revo (vector<_vertex3f> &vertices, vector<_vertex3i> &caras);
 void draw_solid (vector<_vertex3f> &vertices, vector<_vertex3i> &caras);
 void draw_points (vector<_vertex3f> &vertices);
 void draw_ajedrez (vector<_vertex3f> &vertices, vector<_vertex3i> &caras);

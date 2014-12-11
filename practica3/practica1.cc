@@ -43,6 +43,13 @@ vector<_vertex3f> Tapas;
 vector<_vertex3f> Vertices_cubo;
 vector<_vertex3i> Caras_cubo;
 
+vector<_vertex3f> Vertices_beth;
+vector<_vertex3i> Caras_beth;
+
+vector<_vertex3f> Vertices_cilindro;
+vector<_vertex3i> Caras_cilindro;
+vector<_vertex3f> Tapas_cilindro;
+
 vector<_vertex3f> Vertices2;
 vector<_vertex3i> Caras2;
 vector<_vertex3f> Tapas2;
@@ -51,17 +58,17 @@ vector<float> vertic;
 vector<int> faces;
 
 char *nombre_ply;
-char *nombre_ply2;
 
-int opc = 1;
+int opc = 3;
 int opcFigura = 5; 
 int opcFiguraAux = 5;
-int revoluciones;
+int revoluciones = 50;
 
 int grado_rotatoria = 0;
 int translacion_carga = 0;
 int tamanio_hilos = 10;
 int movimiento_lateral = 0;
+int angulo = 0;
 
 void FloatToVertexf(vector<float> &vect, vector<_vertex3f> &result) {
     result.resize(vect.size()/3);
@@ -71,6 +78,7 @@ void FloatToVertexf(vector<float> &vect, vector<_vertex3f> &result) {
         result[i].z = vect[3*i+2];
     }
 }
+
 
 void FloatToVertexf(vector<float> &vect, vector<_vertex3f> &vertices, vector<_vertex3f> &tapas)  {
     vertices.resize(0);
@@ -112,15 +120,10 @@ void leer_datos_ply(vector<float> &vertic, vector<int> &faces, char *nombre) {
 void leer_datos_ply(vector<_vertex3f> &vertices, vector<_vertex3f> &tapas, vector<_vertex3i> &caras, char *nombre) {
     _file_ply ply;
 
-    vector<float> vertic; 
-    vector<int> faces;
-    cout << "Aun no hay fallos" << endl;
     ply.open(nombre);
     ply.read(vertic, faces);
-    cout << "Hasta aquí todo bien." << endl;
-    FloatToVertexf(vertic, vertices, tapas);
-    IntToVertexi(faces, caras);
     ply.close();
+
 }
 
 
@@ -376,100 +379,15 @@ void leer_datos_revo4(vector<_vertex3f> &Vertices, vector<_vertex3i> &triangles,
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 
-void dibujar_A( vector<_vertex3f> &vertices, vector<_vertex3i> &caras){
-        
-    /*if( toupper(tecla) == 'A'||toupper(tecla) == 'S'||toupper(tecla) == 'P'||toupper(tecla) == 'L')
-        tipo = toupper(tecla);
-    
-    switch (tipo){
-        //case 'A':   draw_ajedrez (Vertices,Caras); break;
-        //case 'S':   draw_solido(Vertices,Caras); break;
-        /*case 'L':  draw_alambre_revo(vertices,caras); break;
-        //case 'P':   draw_vertices(Vertices); break;   
-        default:   draw_solid(vertices,caras); 
-    //}*/
-
-    draw_ajedrez (vertices, caras);
+void dibujar( vector<_vertex3f> &vertices, vector<_vertex3i> &caras){
+    if (opc == 1) draw_points(vertices);
+    else if (opc == 2) draw_alambre_revo(vertices, caras);
+    else if (opc == 3) draw_solid(vertices, caras);
+    else if(opc == 4) draw_ajedrez(vertices,caras);
 }
 
 void cubo (vector<_vertex3f> vertices, vector<_vertex3i> caras) {
-    dibujar_A(vertices, caras);
-/*
-    vertices.resize(8);
-    caras.resize(12);
-    // Vertices frontales
-    vertices[0].x = -0.5; vertices[0].y =  0.5; vertices[0].z =  0.5;
-    vertices[1].x = -0.5; vertices[1].y = -0.5; vertices[1].z =  0.5;
-    vertices[2].x =  0.5; vertices[2].y = -0.5; vertices[2].z =  0.5;
-    vertices[3].x =  0.5; vertices[3].y =  0.5; vertices[3].z =  0.5;
-    
-    // Vertices traseros
-    vertices[4].x = -0.5; vertices[4].y =  0.5; vertices[4].z = -0.5;
-    vertices[5].x = -0.5; vertices[5].y = -0.5; vertices[5].z = -0.5;
-    vertices[6].x =  0.5; vertices[6].y = -0.5; vertices[6].z = -0.5;
-    vertices[7].x =  0.5; vertices[7].y =  0.5; vertices[7].z = -0.5;
-
-
-
-    caras[0].x = 0;
-    caras[0].y = 1;
-    caras[0].z = 3;
-
-    caras[1].x = 1;
-    caras[1].y = 2;
-    caras[1].z = 3;
-
-//------------------------
-
-    caras[2].x = 2;
-    caras[2].y = 5;
-    caras[2].z = 1;
-
-    caras[3].x = 2;
-    caras[3].y = 6;
-    caras[3].z = 5;
-
-//------------------------
-
-    caras[4].x = 7;
-    caras[4].y = 4;
-    caras[4].z = 0;
-
-    caras[5].x = 7;
-    caras[5].y = 3;
-    caras[5].z = 0;
-
-//-----------------------
-
-    caras[6].x = 7;
-    caras[6].y = 3;
-    caras[6].z = 2;
-
-    caras[7].x = 6;
-    caras[7].y = 2;
-    caras[7].z = 7;
-
-
-//----------------------
-
-    caras[8].x = 4;
-    caras[8].y = 6;
-    caras[8].z = 7;
-
-    caras[9].x = 6;
-    caras[9].y = 5;
-    caras[9].z = 4;
-
-//----------------------
-
-    caras[10].x = 0;
-    caras[10].y = 4;
-    caras[10].z = 5;
-
-    caras[11].x = 0;
-    caras[11].y = 5;
-    caras[11].z = 1;
-*/
+    dibujar(vertices, caras);
 }
 
 void cubo_carga(const vector<_vertex3f> &vertices, const vector<_vertex3i> &caras)  {
@@ -684,6 +602,13 @@ void caja( vector<_vertex3f> &vertices, vector<_vertex3i> &caras) {
     glPopMatrix();
 }
 
+void cilindro(vector<_vertex3f> &vertices, vector<_vertex3i> &caras, vector<_vertex3f> &tapas) {
+    glPushMatrix();
+        glTranslatef(0.0,0.0,0.0);
+        dibujar(vertices, caras);
+    glPopMatrix();
+}
+
 void control_animacion() {
     // 1. Control movimiento lateral
     // cout << "movimiento_lateral: " << movimiento_lateral << endl;
@@ -692,7 +617,7 @@ void control_animacion() {
 
     // 2.Control tamaño hilos
     // cout << "tamanio_hilos: " << tamanio_hilos << endl;
-    if (tamanio_hilos < 3) tamanio_hilos = 3;
+    if (tamanio_hilos < 8) tamanio_hilos = 8;
     else if(tamanio_hilos > 50) tamanio_hilos = 50;
 
     // 3. Control movimiento de plataforma rotatoria
@@ -708,55 +633,70 @@ void grua(vector<_vertex3f> &vertices, vector<_vertex3i> &caras, vector<_vertex3
     leer_datos_cubo(VC, CC);
 
     glMatrixMode(GL_MODELVIEW);
-
     glPushMatrix();
-        glTranslatef(0.0,0.0,-(53.0/2));
-        seccion_grua(VC, CC);
-    glPopMatrix();
-
-    // Seccion delantera
-    glPushMatrix();
-        glTranslatef(0.0,0.0,(53.0/2));
-        seccion_grua(VC, CC);
-    glPopMatrix();
-
-    // Seccion trasera
-    glPushMatrix();
-        glTranslatef(0.0,0.0,-(53.0/2));
-        seccion_grua(VC, CC);
-    glPopMatrix();
-
-    // Uniones
-    glPushMatrix();
-        glTranslatef((53.0/2)-2.25,0.0,0.0);
-        union_secciones(VC, CC);
-    glPopMatrix();
-
-    glPushMatrix();
-        glTranslatef(-((53.0/2)),0.0,0.0);
-        union_secciones(VC, CC);
-    glPopMatrix();
-
-
-    glPushMatrix();
-        glTranslatef(translacion_carga, 0.0,0.0);
+        glRotatef(angulo, 0, 1, 0);
         glPushMatrix();
-            plataforma_carga(VC, CC);
+            glTranslatef(0.0,0.0,-(53.0/2));
+            seccion_grua(VC, CC);
         glPopMatrix();
+
+        // Seccion delantera
         glPushMatrix();
-            glTranslatef(0.0,0.0, movimiento_lateral);
-            glRotatef(grado_rotatoria, 0, 1, 0);
+            glTranslatef(0.0,0.0,(53.0/2));
+            seccion_grua(VC, CC);
+        glPopMatrix();
+
+        // Seccion trasera
+        glPushMatrix();
+            glTranslatef(0.0,0.0,-(53.0/2));
+            seccion_grua(VC, CC);
+        glPopMatrix();
+
+        // Uniones
+        glPushMatrix();
+            glTranslatef((53.0/2)-2.25,0.0,0.0);
+            union_secciones(VC, CC);
+        glPopMatrix();
+
+        glPushMatrix();
+            glTranslatef(-((53.0/2)),0.0,0.0);
+            union_secciones(VC, CC);
+        glPopMatrix();
+
+
+        glPushMatrix();
+            glTranslatef(translacion_carga, 0.0,0.0);
             glPushMatrix();
-                plataforma_rotatoria(VC, CC);
+                plataforma_carga(VC, CC);
             glPopMatrix();
             glPushMatrix();
+                glColor3f(1.0,0.5,0.0);
+                glTranslatef(0,64.5,0);
+                glScalef(10,10,10);
+                cilindro(Vertices_cilindro, Caras_cilindro, Tapas_cilindro);
+            glPopMatrix();
+            glPushMatrix();
+                glTranslatef(0.0,0.0, movimiento_lateral);
+                glRotatef(grado_rotatoria, 0, 1, 0);
                 glPushMatrix();
-                    glTranslatef(0.0,0.0,3.0);
-                    hilo(tamanio_hilos, VC, CC);
+                    plataforma_rotatoria(VC, CC);
                 glPopMatrix();
                 glPushMatrix();
-                    glTranslatef(0.0,0.0,-3.0);
-                    hilo(tamanio_hilos, VC, CC);
+                    glPushMatrix();
+                        glTranslatef(0.0,0.0,3.0);
+                        hilo(tamanio_hilos, VC, CC);
+                    glPopMatrix();
+                    glPushMatrix();
+                        glTranslatef(0.0,0.0,-3.0);
+                        hilo(tamanio_hilos, VC, CC);
+                    glPopMatrix();
+                    glPushMatrix();
+                        glTranslatef(0,-tamanio_hilos,0);
+                        glTranslatef(0.0,56.0,0.0);
+                        //Beethoven
+                        glRotatef(90, 0,1,0);
+                        dibujar(Vertices_beth, Caras_beth);
+                    glPopMatrix();
                 glPopMatrix();
             glPopMatrix();
         glPopMatrix();
@@ -886,21 +826,27 @@ void normal_keys(unsigned char Tecla1,int x,int y)
 {
     if (toupper(Tecla1)=='Q') exit(0);
     if (toupper(Tecla1)=='P') opc = 1;
-    if (toupper(Tecla1)=='A') opc = 2;
+    if (toupper(Tecla1)=='L') opc = 2;
     if (toupper(Tecla1)=='S') opc = 3;
-    if (toupper(Tecla1)=='C') opc = 4;
-    if (toupper(Tecla1)=='M') grado_rotatoria++;
-    if (toupper(Tecla1)=='N') grado_rotatoria--;
-    if (toupper(Tecla1)=='K') translacion_carga++;
-    if (toupper(Tecla1)=='J') translacion_carga--;
-    if (toupper(Tecla1)=='U') tamanio_hilos++;
-    if (toupper(Tecla1)=='I') tamanio_hilos--;
+    if (toupper(Tecla1)=='A') opc = 4;
+    if (Tecla1=='C') grado_rotatoria++;
+    if (Tecla1=='c') grado_rotatoria--;
+    if (Tecla1 =='X') translacion_carga++;
+    if (Tecla1 =='x') translacion_carga--;
+    if (Tecla1 =='Z') angulo++;
+    if (Tecla1 =='z') angulo--;
+    if ((Tecla1)=='V') tamanio_hilos++;
+    if ((Tecla1)=='v') tamanio_hilos--;
     if (toupper(Tecla1)=='G') movimiento_lateral++;
     if (toupper(Tecla1)=='H') movimiento_lateral--;
 
 
-    if (toupper(Tecla1)=='1') opcFiguraAux = 1;
-    if (toupper(Tecla1)=='2') opcFiguraAux = 2;
+    if (toupper(Tecla1)=='1') {
+        leer_datos_ply(vertic, faces, nombre_ply);
+        IntToVertexi(faces, Caras_beth);
+        FloatToVertexf(vertic, Vertices_beth);
+    }
+    if (toupper(Tecla1)=='2') leer_datos_revo(Vertices_cilindro, Caras_cilindro, Tapas_cilindro);
     if (toupper(Tecla1)=='3') opcFiguraAux = 3;
     if (toupper(Tecla1)=='4') opcFiguraAux = 4;
 
@@ -994,9 +940,10 @@ glViewport(0,0,UI_window_width,UI_window_height);
 
 int main(int argc, char **argv)
 {
-
     // se llama a la inicialización de glut
     glutInit(&argc, argv);
+    nombre_ply = "beethoven.ply";
+
 
     // se indica las caracteristicas que se desean para la visualización con OpenGL
     // Las posibilidades son:

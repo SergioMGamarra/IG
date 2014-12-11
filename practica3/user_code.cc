@@ -109,8 +109,8 @@ void generateRotatePoints(vector<_vertex3f> &vertices, vector<_vertex3i> &caras,
 	int tapas = tapasV.size();
 	//a = 45 * 3.141592653589793 / 180.0;
 	//b = tan(a);
-	double ang = -30;
-	double ang2 = -270;
+	double ang = 0;
+	double ang2 = 360;
 	double ang1rad = ang * PI/180.0;
 	double ang2rad = ang2 * PI/180.0;
 	cout << ang1rad << endl;
