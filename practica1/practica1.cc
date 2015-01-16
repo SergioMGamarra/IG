@@ -266,7 +266,7 @@ glEnd();
 void draw_menu(int Opc, int OpcFig) {
     if (OpcFig == 1 | opcFigura == 2) {
         draw(Vertices, Caras, opc);
-    }else {
+    } else {
         draw(vertic, faces, opc);
     }
 }
