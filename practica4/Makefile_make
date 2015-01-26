@@ -16,7 +16,7 @@ MODULOS:= user_code.o\
          jpg_imagen.o file_ply_stl.o\
          jpg_readwrite.o jpg_memsrc.o\
 
-LIBS:= -lglut -ljpeg -lGLU -lGL
+LIBS:= -lglut -ljpeg -lGLU -lGL -static-libstdc++
 CPPFLAGS:= -Wall  -g
 
 $(TARGETS): $(MODULOS)	

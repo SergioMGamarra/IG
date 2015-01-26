@@ -57,13 +57,11 @@ std::vector<int> caras_3;
 float alfa = 0;
 float beta = 0;
 
-// creamos los objetos de las clases draw_objeto_X llamado objetoX
-draw_practica_4_ objeto4_1_1;
-draw_practica_4_ objeto4_1_2;
-draw_practica_4_ objeto4_1_3;
-draw_practica_4_2_ objeto4_2_1;
-draw_practica_4_2_ objeto4_2_2;
-draw_practica_4_2_ objeto4_2_3;
+bool Ini=false;
+FuenteLuz * fuente_luz_0 = NULL, * fuente_luz_1 = NULL;
+//Material ColaTex("text-lata-1.jpg");
+
+Objeto * CocaCola = NULL;
 
 // Vertices del tetraedro
 
@@ -805,89 +803,18 @@ void draw_menu(int Opc, int OpcFig) {
 // Funcion que dibuja los objetos
 //***************************************************************************
 
-void draw_objects_4(){
-    objeto4_2_1.obtener_valores(vertices_1);
-    objeto4_2_2.obtener_valores(vertices_1);
-    objeto4_2_3.obtener_valores(vertices_1);
-    objeto4_1_3.obtener_valores(vertices_1);
+void draw_objects_4()
+{
+    // Activamos las fuentes de luz
+    //fuente_luz_0->activar();
+    //fuente_luz_1->activar();
 
-
-    // Peon 1
-
-    glPushMatrix();
-        //Escalamos la practica 2 para ponerla al mismo tamaño que la 3 y 1
-        glTranslatef(6.0, 2.6, 7.0);
-        glScalef(2.0, 2.0, 2.0);
-        objeto4_2_1.draw_solido_suave_(0);
-    glPopMatrix();
-
-    // Peon 2
-/*
-    glPushMatrix();
-        //Escalamos la practica 2 para ponerla al mismo tamaño que la 3 y 1
-        glTranslatef(3.0, 0.0, 0.0);
-        glScalef(2.0, 2.0, 2.0);
-        objeto4_2_2.draw_solido_plano_(1);
-    glPopMatrix();
-    // Peon 3
-
-    glPushMatrix();
-    //Escalamos la practica 2 para ponerla al mismo tamaño que la 3 y 1
-    glTranslatef(-3.0, 0.0, 0.0);
-    glScalef(2.0, 2.0, 2.0);
-    objeto4_2_3.draw_solido_suave_(2);
-
-
-    glPopMatrix();
-
-/*
-    // figura inferior
-
-    glPushMatrix();
-    //Escalamos la practica 2 para ponerla al mismo tamaño que la 3 y 1
-    //glTranslatef(0.0, -3.0, 0.0);
-    glScalef(10.0, 10.0, 10.0);
-
-
-    objeto4_1_1.obtener_valores(vertices_1);
-    objeto4_1_1.fuentes_luz(alfa, beta); 
-    objeto4_1_1.draw_solido_plano_(1);
-
-
-
-    glPopMatrix();
-        
-
-
-    // figura superior
-
-    glPushMatrix();
-    //Escalamos la practica 2 para ponerla al mismo tamaño que la 3 y 1
-    glTranslatef(0.0, 3.0, 0.0);
-    glScalef(10.0, 10.0, 10.0);
-
-
-    objeto4_1_2.obtener_valores(vertices_2);
-    objeto4_1_2.fuentes_luz(alfa, beta); 
-
-    objeto4_1_1.draw_solido_plano_(1);
-
-
-    glPopMatrix();
-
-    // figura medio
-
-    glPushMatrix();
-    //Escalamos la practica 2 para ponerla al mismo tamaño que la 3 y 1
-    //glTranslatef(0.0, -3.0, 0.0);
-    //glScalef(10.0, 10.0, 10.0);
-
-    objeto4_1_3.fuentes_luz(alfa, beta); 
-    objeto4_1_3.draw_solido_suave_(0);
-    
-    glPopMatrix();     
-
-*/
+    //Objeto PeonNegro;
+    //PeonNegro.create(vertices_1, caras_1);
+    //PeonNegro.draw_solid_material_flat();
+    //PeonNegro->draw_solid_material_flat();
+    //CocaCola->draw_solid_material_flat();
+    CocaCola->draw_points();
 }
 
 
@@ -1038,8 +965,13 @@ void initialize(void)
     change_projection();
     glViewport(0,0,UI_window_width,UI_window_height);
 
-    // Obtenemos los valores de los ply
 
+    // Inicializamos las fuentes de luz
+    fuente_luz_0 = new FuenteLuz(GL_LIGHT0, 80.0f, 50.0f, vectorRGB(1.0f,1.0f,1.0f));
+    fuente_luz_1 = new FuenteLuz(GL_LIGHT1,-100.0f,-30.0f, vectorRGB(0.8f,0.3f,0.2f));
+
+    Objeto * CocaCola = new Objeto(vertices_1, caras_1);
+    CocaCola->create(verticesLata, carasLata);
 
 }
 
@@ -1060,6 +992,10 @@ int main(int argc, char **argv)
     nombre_ply = "beethoven.ply";
 
     leer_datos_ply(vertices_1, caras_1, "lata-pcue.ply");
+
+    IntToVertexi(caras_1, carasLata);
+    FloatToVertexf(vertices_1, verticesLata);
+
     leer_datos_ply(vertices_2, caras_2, "lata-psup.ply");
     leer_datos_ply(vertices_3, caras_3, "lata-pinf.ply");
 

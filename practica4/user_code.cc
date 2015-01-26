@@ -8,6 +8,7 @@
 
 #include "user_code.h"
 
+using namespace std;
 
 //**************************************************************************
 // Funcion para dibujar los vertices de un cubo unidad
@@ -464,7 +465,7 @@ void draw (vector<float> &vertics, vector<int> &cars, int opc) {
 	}
 }
 
-
+/*
 draw_practica_4_::draw_practica_4_()
 {
 	
@@ -1854,5 +1855,228 @@ gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, tamx2, tamy2, GL_RGB, GL_UNSIGNED_BYTE,
 
 delete pimg2;
 }
+*/
+
+FuenteLuz::FuenteLuz( GLenum p_ind_fuente, GLfloat p_longi_ini, GLfloat p_lati_ini, const vectorRGB & p_color )
+{
+   assert( glGetError() == GL_NO_ERROR );
+   
+   // guardar el indice opengl de la fuente, y comprobar que es 
+   // alguno de GL_LIGHT0, GL_LIGHT1, etc.....
+   
+   ind_fuente = p_ind_fuente ;
+   GLenum max_num_fuentes ;
+   
+   glGetIntegerv( GL_MAX_LIGHTS, (GLint *) &max_num_fuentes );
+   assert( GL_LIGHT0 <= ind_fuente );
+   assert( ind_fuente <= GL_LIGHT0 + max_num_fuentes );
+   
+   // inicializar parámetros de la fuente de luz
+   longi_ini = p_longi_ini ;
+   lati_ini  = p_lati_ini  ;
+   longi = longi_ini ;
+   lati  = lati_ini ;
+   
+   col_ambiente  = p_color ;
+   col_difuso    = p_color ;
+   col_especular = p_color ;
+   
+   assert( glGetError() == GL_NO_ERROR );
+}
+
+//----------------------------------------------------------------------
+
+void FuenteLuz::activar()
+{
+   glEnable(ind_fuente) ;  
+   GLfloat light_ambient[] = { col_ambiente.r,col_ambiente.g,col_ambiente.b, 1.0 };
+   GLfloat light_diffuse[] = {  col_difuso.r,col_difuso.g,col_difuso.b, 1.0 };
+   GLfloat light_specular[] = { col_especular.r,col_especular.g,col_especular.b, 1.0 };
+   glLightfv (ind_fuente, GL_AMBIENT, light_ambient);
+   glLightfv (ind_fuente, GL_DIFFUSE, light_diffuse);
+   glLightfv (ind_fuente, GL_SPECULAR, light_specular);
+   
+   glMatrixMode( GL_MODELVIEW ) ;
+   glLoadIdentity() ;
+   glPushMatrix() ;
+	glRotatef( longi, 0.0, 1.0, 0.0 ) ;
+	glRotatef( lati, 1.0, 0.0, 0.0 ) ;
+	 GLfloat pos[] = {0.0,0.0,1.0,0.0};
+	glLightfv(ind_fuente,GL_POSITION, pos);
+   glPopMatrix() ;
+   glLightModeli( GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE );
+   glEnable(GL_RESCALE_NORMAL);
+   glEnable(GL_NORMALIZE);
+}
+
+//----------------------------------------------------------------------
+
+bool FuenteLuz::gestionarEventoTeclaEspecial( int key ) 
+{
+	/*
+   bool actualizar = true ;
+   const float incr = 3.0f ;
+   
+   switch( key )
+   {
+      case GLUT_KEY_RIGHT:
+         longi = longi+incr ;
+         break ;
+      case GLUT_KEY_LEFT:
+         longi = longi-incr ;
+         break ;
+      case GLUT_KEY_UP:
+         lati = minim( lati+incr, 90.0) ;
+         break ;
+      case GLUT_KEY_DOWN:
+         lati = maxim( lati-incr, -90.0 ) ;
+         break ;
+      case GLUT_KEY_HOME:
+         lati  = lati_ini ;
+         longi = longi_ini ;
+         break ;
+      default :
+         actualizar = false ;
+         cout << "tecla no usable para la fuente de luz." << endl << flush ;
+   }
+   
+   //if ( actualizar )
+   //   cout << "fuente de luz cambiada: longi == " << longi << ", lati == " << lati << endl << flush ;
+   return actualizar ;
+   */
+}
+
+void Objeto::compute_faces_normals()
+{
+   	Faces_normals.resize(Faces_vertices.size());
+	
+	for(int i=0;i<Faces_vertices.size();i++)
+	{
+		_vertex3f v0 = Vertices[Faces_vertices[i]._0];
+		_vertex3f v1 = Vertices[Faces_vertices[i]._1];
+		_vertex3f v2 = Vertices[Faces_vertices[i]._2];
+		_vertex3f a1 = v1-v0;
+		_vertex3f a2 = v2-v0;
+		_vertex3f N=a1.cross_product(a2);
+		N.normalize();
+		Faces_normals[i]=N;
+	}
+}
 
 
+//*************************************************************************
+// Calcular normales de vértices,
+//
+//*************************************************************************
+
+void Objeto::compute_vertices_normals()
+{
+ 	Vertices_normals.resize(Vertices.size());
+	for(int i=0;i<Vertices_normals.size();i++)
+	{
+		Vertices_normals[i]=_vertex3f(0,0,0);
+	}
+	for(int i=0; i<Faces_vertices.size();i++)
+	{
+		_vertex3f NC = Faces_normals[i];
+		int j0 = Faces_vertices[i]._0;
+		int j1 = Faces_vertices[i]._1;
+		int j2 = Faces_vertices[i]._2;
+		
+		Vertices_normals[j0]+=NC;
+		Vertices_normals[j1]+=NC;
+		Vertices_normals[j2]+=NC;
+	}
+
+	for(int i=0;i<Vertices_normals.size();i++)
+	{
+		Vertices_normals[i].normalize();
+	}
+}
+
+Objeto::Objeto(vector<float> Vertices1,vector<int> Faces1)  {
+	material = NULL ;
+	Line_color=_vertex4f(0.5,0.5,0.5,1); //Inicia colores
+	Solid_color= _vertex4f(0,0,0.6,1);
+	Solid_chess_color1= _vertex4f(0,.9,.0,1);
+	Solid_chess_color2= _vertex4f(.9,0,.4,1);
+
+}
+
+int Objeto::create(vector<_vertex3f> Vertices1,vector<_vertex3i> Faces1) {
+	_vertex3f v;
+	_vertex3i f;
+
+	Vertices.resize(Vertices1.size());
+	Faces_vertices.resize(Faces1.size());
+
+	for(int i=0;i<Vertices.size();i+=1)
+	{
+		cout << "i: " << i << endl;
+		Vertices[i] = Vertices1[i];
+	}
+
+	for(int i=0;i<Faces1.size();i+=3)
+	{
+		Faces_vertices[i] = Faces1[i];
+	}
+	
+	compute_faces_normals();
+	compute_vertices_normals();
+
+  	Vertices_tex_coords.resize(Vertices.size());
+   	for(int i = 0; i < Vertices.size(); i++){ Vertices_tex_coords[i] = _vertex2f(0.0,0.0); }
+	
+	cout << "Salgo del create"<<endl;
+
+}
+
+
+/*int Objeto::create()
+{
+	
+/*
+	cout << "Entramos en create" << endl;
+
+
+
+}
+*/
+
+void Objeto::draw_solid_material_gouroud(/*vector<_vertex3f> & Vertices_normals, vector<_vertex3i> & Faces_vertices,  vector<_vertex3f> & Vertices*/)
+{
+   glShadeModel(GL_SMOOTH);
+   //material->activar();
+   for(int i=0;i<Faces_vertices.size();i++)
+	{
+		_vertex3f v1 = Vertices[Faces_vertices[i]._0];
+		_vertex3f v2 = Vertices[Faces_vertices[i]._1];
+		_vertex3f v3 = Vertices[Faces_vertices[i]._2];
+		_vertex3f f1 = Vertices_normals[Faces_vertices[i]._0];
+		_vertex3f f2 = Vertices_normals[Faces_vertices[i]._1];
+		_vertex3f f3 = Vertices_normals[Faces_vertices[i]._2];
+		glBegin( GL_TRIANGLES );
+			glNormal3f(f1.x,f1.y,f1.z); glTexCoord2f(Vertices_tex_coords[Faces_vertices[i]._0].s,Vertices_tex_coords[Faces_vertices[i]._0].t ); glVertex3f(v1.x,v1.y,v1.z);
+			glNormal3f(f2.x,f2.y,f2.z); glTexCoord2f(Vertices_tex_coords[Faces_vertices[i]._1].s,Vertices_tex_coords[Faces_vertices[i]._1].t );glVertex3f(v2.x,v2.y,v2.z);
+			glNormal3f(f3.x,f3.y,f3.z); glTexCoord2f(Vertices_tex_coords[Faces_vertices[i]._2].s,Vertices_tex_coords[Faces_vertices[i]._2].t );glVertex3f(v3.x,v3.y,v3.z);
+		glEnd();
+	}
+}
+
+void Objeto::draw_solid_material_flat()
+{
+   glShadeModel(GL_FLAT);
+   //material->activar();
+   for(int i=0;i<Faces_vertices.size();i++)
+	{
+		_vertex3f v1 = Vertices[Faces_vertices[i]._0];
+		_vertex3f v2 = Vertices[Faces_vertices[i]._1];
+		_vertex3f v3 = Vertices[Faces_vertices[i]._2];
+		_vertex3f f1 = Faces_normals[i];
+		glBegin( GL_TRIANGLES );
+			glNormal3f(f1.x,f1.y,f1.z); glTexCoord2f(Vertices_tex_coords[Faces_vertices[i]._0].s,Vertices_tex_coords[Faces_vertices[i]._0].t );glVertex3f(v1.x,v1.y,v1.z);
+			glTexCoord2f(Vertices_tex_coords[Faces_vertices[i]._1].s,Vertices_tex_coords[Faces_vertices[i]._2].t );glVertex3f(v2.x,v2.y,v2.z);
+			glTexCoord2f(Vertices_tex_coords[Faces_vertices[i]._2].s,Vertices_tex_coords[Faces_vertices[i]._2].t );glVertex3f(v3.x,v3.y,v3.z);
+		glEnd();
+	}
+}
