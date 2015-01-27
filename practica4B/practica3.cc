@@ -848,14 +848,14 @@ void draw_face(_vertex3i cara, vector<_vertex3f> &vertices)  {
 
 void draw_solid_color (vector<_vertex3f> &vertices, vector<_vertex3i> &caras, int fig)  {
         for (int i = 0; i < caras.size(); ++i) {
-/*            glColor3ub(fig*15, cont_j, cont_k);
+            glColor3ub(fig*15, cont_j, cont_k);
 
             if (cont_j == 255) {
                 cont_k++;
                 cont_j = 0;
             } else {
                 cont_j++;
-            }*/
+            }
             draw_face(caras[i], vertices);
         }
 
@@ -867,17 +867,20 @@ void draw_objects_5()  {
     cont_i = 0, cont_j = 0, cont_k = 0;
     glDisable(GL_LIGHTING);
     glPushMatrix();
-        glTranslatef(-10, 0, 0);
+        glTranslatef(-15, 0, 0);
+        glScalef(0.5, 0.5, 0.5);
         draw_solid_color(Vertices_beth, Caras_beth,1);
     glPopMatrix();
     glPushMatrix();
         glTranslatef(0, 0, 0);
+        glScalef(0.5, 0.5, 0.5);
         draw_solid_color(Vertices_beth, Caras_beth,2);
     glPopMatrix();
         glPushMatrix();
         glTranslatef(10, 0, 0);
+        glScalef(0.5, 0.5, 0.5);
         draw_solid_color(Vertices_beth, Caras_beth,3);
-    glPopMatrix();
+    glPopMatrix();/*
     glPushMatrix();
         glTranslatef(10, 0, 10);
         draw_solid_color(Vertices_beth, Caras_beth,4);
@@ -886,7 +889,7 @@ void draw_objects_5()  {
         glTranslatef(0, 0, 10);
         draw_solid_color(Vertices_beth, Caras_beth,5);
     glPopMatrix();
-/*        glPushMatrix();
+        glPushMatrix();
         glTranslatef(-10, 0, 10);
         draw_solid_color(Vertices_beth, Caras_beth,6);
     glPopMatrix();
@@ -1263,7 +1266,7 @@ int main(int argc, char **argv)
 {
     // se llama a la inicialización de glut
     glutInit(&argc, argv);
-    nombre_ply = "beethoven.ply";
+    nombre_ply = "ant.ply";
 
 
 
