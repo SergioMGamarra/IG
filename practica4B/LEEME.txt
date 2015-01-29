@@ -1,0 +1,5 @@
+Autor: Sergio Muñoz Gamarra
+
+Para utilizar la práctica tan solo necesitará ejecutar ./practica5
+
+Una vez dentro de la práctica pulsando 5 encontrará la matriz de beethoven y pulsando 6 encontrará una segunda versión en la que podrá ver una matriz de hormigas pero que en vez de seleccionar la figura entera podrá seleccionar cara a cara de las hormigas
